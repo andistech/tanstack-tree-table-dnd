@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { DndContext, DragOverlay, closestCenter } from '@dnd-kit/core';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -8,6 +8,7 @@ import { treeTableColumns } from './columns';
 import { ROW_HEIGHT_PX } from './constants';
 import { TreeTableHeader } from './TreeTableHeader';
 import { TreeTableRow } from './TreeTableRow';
+import { treeTableCollisionDetection } from '../../features/tree-table/dnd/collision';
 import { useTreeTableDnd } from '../../features/tree-table/hooks/useTreeTableDnd';
 import { TreeTableDragOverlay } from '../../features/tree-table/dnd/drag-overlay';
 import type { DropMode, TreeState, VisibleRow } from '../../features/tree-table/model/types';
@@ -107,7 +108,7 @@ export function TreeTable({
 
   return (
     <DndContext
-      collisionDetection={closestCenter}
+      collisionDetection={treeTableCollisionDetection}
       sensors={sensors}
       onDragStart={onDragStart}
       onDragOver={onDragOver}

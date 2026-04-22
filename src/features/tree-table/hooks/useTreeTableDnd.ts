@@ -1,14 +1,9 @@
 import { useMemo, useState } from 'react';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 
-import {
-  DROP_INSIDE_ZONE_RATIO_DROPPABLE,
-  DROP_INSIDE_ZONE_RATIO_NON_DROPPABLE,
-} from '../../../components/tree-table/constants';
-import { resolveDropModeFromRects } from '../dnd/collision';
+import { resolveDropModeFromPosition } from '../dnd/collision';
 import { useTreeTableSensors } from '../dnd/sensors';
 import { resolveDrop } from '../model/resolve-drop';
-import { canNodeHaveChildren } from '../model/tree-selectors';
 import { validateMove } from '../model/validation';
 import type { DndPreviewState } from '../dnd/dnd-types';
 import type { DropMode, TreeState, VisibleRow } from '../model/types';
@@ -27,6 +22,22 @@ const initialPreview: DndPreviewState = {
 
 function toRowId(value: unknown): string | null {
   return typeof value === 'string' ? value : null;
+}
+
+function getEventClientY(activatorEvent: Event): number | null {
+  if (activatorEvent instanceof PointerEvent || activatorEvent instanceof MouseEvent) {
+    return activatorEvent.clientY;
+  }
+
+  if (activatorEvent instanceof TouchEvent && activatorEvent.touches.length > 0) {
+    return activatorEvent.touches[0]?.clientY ?? null;
+  }
+
+  if (activatorEvent instanceof TouchEvent && activatorEvent.changedTouches.length > 0) {
+    return activatorEvent.changedTouches[0]?.clientY ?? null;
+  }
+
+  return null;
 }
 
 export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndArgs) {
@@ -61,14 +72,10 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
       return;
     }
 
-    const activeRect = event.active.rect.current.translated ?? event.active.rect.current.initial ?? null;
     const overRect = event.over?.rect ?? null;
-    const overNode = state.nodesById[overId];
-    const insideZoneRatio =
-      overNode && canNodeHaveChildren(overNode)
-        ? DROP_INSIDE_ZONE_RATIO_DROPPABLE
-        : DROP_INSIDE_ZONE_RATIO_NON_DROPPABLE;
-    const mode = resolveDropModeFromRects(activeRect, overRect, insideZoneRatio);
+    const fallbackRect = event.active.rect.current.translated ?? event.active.rect.current.initial ?? null;
+    const pointerY = getEventClientY(event.activatorEvent) ?? (fallbackRect ? fallbackRect.top + fallbackRect.height / 2 : null);
+    const mode = resolveDropModeFromPosition(overRect, pointerY);
 
     const resolvedMove = resolveDrop(state, dragId, overId, mode);
     if (!resolvedMove) {

@@ -1,4 +1,13 @@
-import { DROP_INSIDE_ZONE_RATIO_DROPPABLE } from '../../../components/tree-table/constants';
+import {
+  closestCenter,
+  pointerWithin,
+  type CollisionDetection,
+} from '@dnd-kit/core';
+
+import {
+  DROP_AFTER_ZONE_START,
+  DROP_BEFORE_ZONE_END,
+} from '../../../components/tree-table/constants';
 import type { DropMode } from '../model/types';
 
 interface RectLike {
@@ -6,25 +15,29 @@ interface RectLike {
   height: number;
 }
 
-export function resolveDropModeFromRects(
-  activeRect: RectLike | null,
-  overRect: RectLike | null,
-  insideZoneRatio = DROP_INSIDE_ZONE_RATIO_DROPPABLE,
-): DropMode {
-  if (!activeRect || !overRect) {
+export const treeTableCollisionDetection: CollisionDetection = (args) => {
+  const pointerCollisions = pointerWithin(args);
+
+  if (pointerCollisions.length > 0) {
+    return pointerCollisions;
+  }
+
+  // Fallback keeps keyboard drag behavior stable.
+  return closestCenter(args);
+};
+
+export function resolveDropModeFromPosition(overRect: RectLike | null, pointerY: number | null): DropMode {
+  if (!overRect || pointerY === null) {
     return 'inside';
   }
 
-  const clampedInsideZoneRatio = Math.min(0.9, Math.max(0.1, insideZoneRatio));
-  const pointerY = activeRect.top + activeRect.height / 2;
-  const topThreshold = overRect.top + overRect.height * ((1 - clampedInsideZoneRatio) / 2);
-  const bottomThreshold = overRect.top + overRect.height * (1 - (1 - clampedInsideZoneRatio) / 2);
+  const relativeY = (pointerY - overRect.top) / overRect.height;
 
-  if (pointerY < topThreshold) {
+  if (relativeY < DROP_BEFORE_ZONE_END) {
     return 'before';
   }
 
-  if (pointerY > bottomThreshold) {
+  if (relativeY >= DROP_AFTER_ZONE_START) {
     return 'after';
   }
 
