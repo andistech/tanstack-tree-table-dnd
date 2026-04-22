@@ -68,7 +68,7 @@ export function TreeTable({
 
   const rowIds = useMemo(() => visibleRows.map((row) => row.id), [visibleRows]);
 
-  const { sensors, activeRow, preview, onDragStart, onDragOver, onDragEnd, onDragCancel } =
+  const { sensors, activeRow, preview, onDragStart, onDragMove, onDragOver, onDragEnd, onDragCancel } =
     useTreeTableDnd({
       state,
       visibleRows,
@@ -111,6 +111,7 @@ export function TreeTable({
       collisionDetection={treeTableCollisionDetection}
       sensors={sensors}
       onDragStart={onDragStart}
+      onDragMove={onDragMove}
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       onDragCancel={onDragCancel}

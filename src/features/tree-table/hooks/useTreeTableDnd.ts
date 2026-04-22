@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
+import { useMemo, useRef, useState } from 'react';
+import type { DragEndEvent, DragMoveEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 
 import { resolveDropModeFromPosition } from '../dnd/collision';
 import { useTreeTableSensors } from '../dnd/sensors';
@@ -19,6 +19,7 @@ const initialPreview: DndPreviewState = {
   mode: null,
   isValid: true,
 };
+const DEBUG_DND = import.meta.env.DEV;
 
 function toRowId(value: unknown): string | null {
   return typeof value === 'string' ? value : null;
@@ -43,18 +44,40 @@ function getEventClientY(activatorEvent: Event): number | null {
 export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndArgs) {
   const sensors = useTreeTableSensors();
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
+  const [dragStartClientY, setDragStartClientY] = useState<number | null>(null);
   const [preview, setPreview] = useState<DndPreviewState>(initialPreview);
+  const lastTraceSignatureRef = useRef<string | null>(null);
 
   const activeRow = useMemo(
     () => visibleRows.find((row) => row.id === activeDragId) ?? null,
     [activeDragId, visibleRows],
   );
 
-  function onDragStart(event: DragStartEvent): void {
-    setActiveDragId(toRowId(event.active.id));
+  function trace(label: string, payload: Record<string, unknown>): void {
+    if (!DEBUG_DND) {
+      return;
+    }
+
+    const signature = JSON.stringify({ label, ...payload });
+    if (lastTraceSignatureRef.current === signature) {
+      return;
+    }
+
+    lastTraceSignatureRef.current = signature;
+    console.debug('[TreeTable DnD]', label, payload);
   }
 
-  function onDragOver(event: DragOverEvent): void {
+  function onDragStart(event: DragStartEvent): void {
+    const dragId = toRowId(event.active.id);
+    setActiveDragId(dragId);
+    setDragStartClientY(getEventClientY(event.activatorEvent));
+    trace('drag-start', {
+      dragId,
+      startClientY: getEventClientY(event.activatorEvent),
+    });
+  }
+
+  function updatePreviewFromEvent(event: DragOverEvent | DragMoveEvent, source: 'move' | 'over'): void {
     const dragId = activeDragId;
     if (!dragId) {
       setPreview(initialPreview);
@@ -74,11 +97,24 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
 
     const overRect = event.over?.rect ?? null;
     const fallbackRect = event.active.rect.current.translated ?? event.active.rect.current.initial ?? null;
-    const pointerY = getEventClientY(event.activatorEvent) ?? (fallbackRect ? fallbackRect.top + fallbackRect.height / 2 : null);
+    const pointerY =
+      dragStartClientY !== null
+        ? dragStartClientY + event.delta.y
+        : getEventClientY(event.activatorEvent) ??
+          (fallbackRect ? fallbackRect.top + fallbackRect.height / 2 : null);
     const mode = resolveDropModeFromPosition(overRect, pointerY);
+    const relativeY = overRect && pointerY !== null ? (pointerY - overRect.top) / overRect.height : null;
 
     const resolvedMove = resolveDrop(state, dragId, overId, mode);
     if (!resolvedMove) {
+      trace('preview-unresolved', {
+        source,
+        dragId,
+        overId,
+        pointerY,
+        relativeY,
+        mode,
+      });
       setPreview({
         overId,
         mode,
@@ -96,6 +132,19 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
       mode,
     });
 
+    trace('preview-update', {
+      source,
+      dragId,
+      overId,
+      mode,
+      pointerY,
+      relativeY,
+      targetParentId: resolvedMove.targetParentId,
+      targetIndex: resolvedMove.targetIndex,
+      isValid: validation.valid,
+      reason: validation.reason ?? null,
+    });
+
     setPreview({
       overId,
       mode,
@@ -104,21 +153,48 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
     });
   }
 
+  function onDragMove(event: DragMoveEvent): void {
+    updatePreviewFromEvent(event, 'move');
+  }
+
+  function onDragOver(event: DragOverEvent): void {
+    updatePreviewFromEvent(event, 'over');
+  }
+
   function onDragEnd(event: DragEndEvent): void {
     const dragId = activeDragId;
     const eventOverId = toRowId(event.over?.id);
 
     if (dragId && eventOverId && preview.mode && preview.isValid) {
+      trace('drag-end-apply', {
+        dragId,
+        overId: eventOverId,
+        mode: preview.mode,
+      });
       onMove(dragId, eventOverId, preview.mode);
+    } else {
+      trace('drag-end-skip', {
+        dragId,
+        overId: eventOverId,
+        mode: preview.mode,
+        isValid: preview.isValid,
+      });
     }
 
     setActiveDragId(null);
+    setDragStartClientY(null);
     setPreview(initialPreview);
+    lastTraceSignatureRef.current = null;
   }
 
   function onDragCancel(): void {
+    trace('drag-cancel', {
+      dragId: activeDragId,
+    });
     setActiveDragId(null);
+    setDragStartClientY(null);
     setPreview(initialPreview);
+    lastTraceSignatureRef.current = null;
   }
 
   return {
@@ -127,6 +203,7 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
     activeRow,
     preview,
     onDragStart,
+    onDragMove,
     onDragOver,
     onDragEnd,
     onDragCancel,
