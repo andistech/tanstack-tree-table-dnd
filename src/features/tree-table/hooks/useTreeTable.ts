@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { createDemoTreeState } from '../demo/demo-data';
 import { moveNode } from '../model/move-node';
-import { toggleExpanded } from '../model/tree-state';
+import { setExpanded, toggleExpanded } from '../model/tree-state';
 import type { DropMode, MoveNodeResult, TreeState } from '../model/types';
 import { useVisibleRows } from './useVisibleRows';
 
@@ -13,6 +13,7 @@ export function useTreeTable(initialState?: TreeState) {
   const [lastMove, setLastMove] = useState<MoveNodeResult | null>(null);
   const [virtualizationEnabled, setVirtualizationEnabled] = useState(false);
   const [showDropLabels, setShowDropLabels] = useState(true);
+  const [autoExpandDropParent, setAutoExpandDropParent] = useState(true);
 
   const visibleRows = useVisibleRows(state);
 
@@ -51,10 +52,24 @@ export function useTreeTable(initialState?: TreeState) {
         mode,
       });
 
-      resultSnapshot = result;
-      setLastMove(result);
+      let nextState = result.nextState;
 
-      return result.nextState;
+      if (
+        autoExpandDropParent &&
+        result.changed &&
+        result.resolvedMove?.mode === 'inside' &&
+        result.resolvedMove.targetParentId
+      ) {
+        nextState = setExpanded(nextState, result.resolvedMove.targetParentId, true);
+      }
+
+      const resultWithExpansion: MoveNodeResult =
+        nextState === result.nextState ? result : { ...result, nextState };
+
+      resultSnapshot = resultWithExpansion;
+      setLastMove(resultWithExpansion);
+
+      return nextState;
     });
 
     return resultSnapshot;
@@ -73,8 +88,10 @@ export function useTreeTable(initialState?: TreeState) {
     feedbackMessage,
     virtualizationEnabled,
     showDropLabels,
+    autoExpandDropParent,
     setVirtualizationEnabled,
     setShowDropLabels,
+    setAutoExpandDropParent,
     onToggleExpand,
     onMove,
     onReset,

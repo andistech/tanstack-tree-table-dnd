@@ -3,6 +3,8 @@ interface TreeTableToolbarProps {
   onToggleVirtualization: () => void;
   showDropLabels: boolean;
   onToggleDropLabels: () => void;
+  autoExpandDropParent: boolean;
+  onToggleAutoExpandDropParent: () => void;
   onReset: () => void;
   feedbackMessage: string | null;
 }
@@ -12,6 +14,8 @@ export function TreeTableToolbar({
   onToggleVirtualization,
   showDropLabels,
   onToggleDropLabels,
+  autoExpandDropParent,
+  onToggleAutoExpandDropParent,
   onReset,
   feedbackMessage,
 }: TreeTableToolbarProps) {
@@ -31,6 +35,14 @@ export function TreeTableToolbar({
         className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
       >
         Drop labels: {showDropLabels ? 'On' : 'Off'}
+      </button>
+
+      <button
+        type="button"
+        onClick={onToggleAutoExpandDropParent}
+        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+      >
+        Auto-expand parent: {autoExpandDropParent ? 'On' : 'Off'}
       </button>
 
       <button

@@ -13,8 +13,10 @@ export function TreeTableDemo() {
     feedbackMessage,
     virtualizationEnabled,
     showDropLabels,
+    autoExpandDropParent,
     setVirtualizationEnabled,
     setShowDropLabels,
+    setAutoExpandDropParent,
     onToggleExpand,
     onMove,
     onReset,
@@ -30,6 +32,8 @@ export function TreeTableDemo() {
           onToggleVirtualization={() => setVirtualizationEnabled((previous) => !previous)}
           showDropLabels={showDropLabels}
           onToggleDropLabels={() => setShowDropLabels((previous) => !previous)}
+          autoExpandDropParent={autoExpandDropParent}
+          onToggleAutoExpandDropParent={() => setAutoExpandDropParent((previous) => !previous)}
           onReset={onReset}
           feedbackMessage={dragFeedback ?? feedbackMessage}
         />
