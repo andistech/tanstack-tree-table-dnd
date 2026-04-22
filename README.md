@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# React Tree Table Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Production-oriented TreeTable prototype built with:
 
-Currently, two official plugins are available:
+- Bun
+- Vite 6
+- TypeScript 5.6
+- React 19
+- Tailwind CSS 4
+- TanStack Table v8
+- TanStack Virtual v3
+- dnd-kit (`@dnd-kit/core`, `@dnd-kit/sortable`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+bun install
+bun dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Test
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+bun test
+bun run build
 ```
+
+## Tree model
+
+Canonical state uses a normalized adjacency structure (`nodesById`, `rootIds`, `expandedIds`).
+
+`VisibleRow[]` is derived from canonical state for rendering/virtualization and is never stored as canonical state.
+
+## Move algorithm
+
+Source: `src/features/tree-table/model/move-node.ts`
+
+1. Resolve the drop into a deterministic target (`targetParentId`, `targetIndex`) with `before` / `after` / `inside`.
+2. Validate constraints:
+   - no self-drop
+   - no dropping into descendants (cycle prevention)
+   - target parent supports children
+   - disabled rows cannot move/receive drops
+3. Remove dragged id from source sibling list.
+4. Insert into destination sibling list.
+5. Apply same-parent index correction when moving downward.
+6. Update `parentId` only when parent changes.
+7. Return immutable `nextState` with `changed`/`reason` metadata.
+
+## Demo behaviors
+
+- Expand/collapse groups
+- Reorder siblings
+- Reparent by dropping `inside` an allowed target
+- Invalid drop highlighting and rejection reasons
+- Optional row virtualization toggle
+- Debug inspector for canonical state and last move

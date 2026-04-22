@@ -1,0 +1,105 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { cva } from 'class-variance-authority';
+import { flexRender, type Row } from '@tanstack/react-table';
+
+import { TreeTableCell } from './TreeTableCell';
+import { TreeTableDropIndicator } from './TreeTableDropIndicator';
+import { cn } from '../../lib/cn';
+import type { DndPreviewState } from '../../features/tree-table/dnd/dnd-types';
+import type { VisibleRow } from '../../features/tree-table/model/types';
+
+const rowVariants = cva('border-b border-slate-200 text-sm transition-colors', {
+  variants: {
+    state: {
+      default: 'bg-white hover:bg-amber-50/40',
+      dragging: 'opacity-50',
+      focused: 'bg-amber-50/60',
+      invalid: 'bg-rose-50/70',
+    },
+  },
+  defaultVariants: {
+    state: 'default',
+  },
+});
+
+interface TreeTableRowProps {
+  tableRow: Row<VisibleRow>;
+  preview: DndPreviewState;
+  onToggleExpand: (id: string) => void;
+  showDropZones: boolean;
+  focusedRowId: string | null;
+  onFocusRow: (id: string) => void;
+}
+
+export function TreeTableRow({
+  tableRow,
+  preview,
+  onToggleExpand,
+  showDropZones,
+  focusedRowId,
+  onFocusRow,
+}: TreeTableRowProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: tableRow.original.id,
+    disabled: Boolean(tableRow.original.data.isDisabled),
+  });
+
+  const isDropTarget = preview.overId === tableRow.original.id;
+  const stateVariant = !preview.isValid && isDropTarget
+    ? 'invalid'
+    : isDragging
+      ? 'dragging'
+      : focusedRowId === tableRow.original.id
+        ? 'focused'
+        : 'default';
+
+  return (
+    <tr
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+      className={cn(rowVariants({ state: stateVariant }))}
+      tabIndex={0}
+      onFocus={() => onFocusRow(tableRow.original.id)}
+    >
+      {tableRow.getVisibleCells().map((cell) => {
+        if (cell.column.id === 'tree') {
+          return (
+            <td key={cell.id} className="relative min-w-[360px] px-2 py-0">
+              {isDropTarget && preview.mode ? (
+                <TreeTableDropIndicator mode={preview.mode} valid={preview.isValid} />
+              ) : null}
+              <TreeTableCell
+                row={tableRow.original}
+                onToggleExpand={onToggleExpand}
+                showDropZones={showDropZones}
+                handle={{
+                  attributes,
+                  listeners,
+                  setActivatorNodeRef,
+                }}
+              />
+            </td>
+          );
+        }
+
+        return (
+          <td key={cell.id} className="px-3 py-2 text-slate-700">
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </td>
+        );
+      })}
+    </tr>
+  );
+}
