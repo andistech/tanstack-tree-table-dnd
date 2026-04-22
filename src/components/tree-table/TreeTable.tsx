@@ -79,13 +79,31 @@ export function TreeTable({
       return;
     }
 
+    const targetRow =
+      preview.overId ? visibleRows.find((row) => row.id === preview.overId) ?? null : null;
+
+    if (preview.isValid && preview.mode && targetRow) {
+      if (preview.mode === 'inside') {
+        onDragFeedbackChange(`Drop inside: "${targetRow.data.label}" becomes parent`);
+        return;
+      }
+
+      if (preview.mode === 'before') {
+        onDragFeedbackChange(`Drop before "${targetRow.data.label}" (same level)`);
+        return;
+      }
+
+      onDragFeedbackChange(`Drop after "${targetRow.data.label}" (same level)`);
+      return;
+    }
+
     if (preview.reason && !preview.isValid) {
       onDragFeedbackChange(preview.reason);
       return;
     }
 
     onDragFeedbackChange(null);
-  }, [onDragFeedbackChange, preview]);
+  }, [onDragFeedbackChange, preview, visibleRows]);
 
   return (
     <DndContext

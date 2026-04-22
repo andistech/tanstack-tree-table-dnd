@@ -3,18 +3,35 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/cn';
 import type { DropMode } from '../../features/tree-table/model/types';
 
-const dropIndicatorVariants = cva('absolute inset-x-0 pointer-events-none z-10', {
+const dropIndicatorVariants = cva('pointer-events-none absolute inset-x-0 z-10', {
   variants: {
     mode: {
       before: 'top-0 border-t-2',
       after: 'bottom-0 border-b-2',
-      inside: 'inset-y-0 border-2 rounded-sm',
+      inside: 'inset-y-0 rounded-sm border-2',
     },
     valid: {
-      true: 'border-emerald-500 bg-emerald-50/40',
+      true: '',
       false: 'border-rose-500 bg-rose-50/40',
     },
   },
+  compoundVariants: [
+    {
+      mode: 'inside',
+      valid: true,
+      className: 'border-emerald-500 bg-emerald-100/40',
+    },
+    {
+      mode: 'before',
+      valid: true,
+      className: 'border-cyan-500',
+    },
+    {
+      mode: 'after',
+      valid: true,
+      className: 'border-cyan-500',
+    },
+  ],
 });
 
 interface TreeTableDropIndicatorProps {
