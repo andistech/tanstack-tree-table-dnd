@@ -1,5 +1,4 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { flexRender, type Row } from '@tanstack/react-table';
 
@@ -47,8 +46,6 @@ export function TreeTableRow({
     listeners,
     setNodeRef,
     setActivatorNodeRef,
-    transform,
-    transition,
     isDragging,
   } = useSortable({
     id: tableRow.original.id,
@@ -72,10 +69,6 @@ export function TreeTableRow({
   return (
     <tr
       ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-      }}
       className={cn(rowVariants({ state: stateVariant }))}
       data-drop-mode={isDropTarget ? preview.mode ?? undefined : undefined}
       tabIndex={0}
