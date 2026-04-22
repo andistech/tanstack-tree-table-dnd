@@ -17,7 +17,7 @@ interface TreeTableProps {
   state: TreeState;
   visibleRows: VisibleRow[];
   virtualizationEnabled: boolean;
-  showDropZones: boolean;
+  showDropLabels: boolean;
   onToggleExpand: (id: string) => void;
   onMove: (dragId: string, overId: string | null, mode: DropMode) => void;
   onDragFeedbackChange?: (message: string | null) => void;
@@ -27,7 +27,7 @@ export function TreeTable({
   state,
   visibleRows,
   virtualizationEnabled,
-  showDropZones,
+  showDropLabels,
   onToggleExpand,
   onMove,
   onDragFeedbackChange,
@@ -143,7 +143,7 @@ export function TreeTable({
                     tableRow={tableRow}
                     preview={preview}
                     onToggleExpand={onToggleExpand}
-                    showDropZones={showDropZones}
+                    showDropLabels={showDropLabels}
                     focusedRowId={focusedRowId}
                     onFocusRow={setFocusedRowId}
                   />

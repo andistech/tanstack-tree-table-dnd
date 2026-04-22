@@ -12,9 +12,9 @@ export function TreeTableDemo() {
     lastMove,
     feedbackMessage,
     virtualizationEnabled,
-    showDropZones,
+    showDropLabels,
     setVirtualizationEnabled,
-    setShowDropZones,
+    setShowDropLabels,
     onToggleExpand,
     onMove,
     onReset,
@@ -28,8 +28,8 @@ export function TreeTableDemo() {
         <TreeTableToolbar
           virtualizationEnabled={virtualizationEnabled}
           onToggleVirtualization={() => setVirtualizationEnabled((previous) => !previous)}
-          showDropZones={showDropZones}
-          onToggleDropZones={() => setShowDropZones((previous) => !previous)}
+          showDropLabels={showDropLabels}
+          onToggleDropLabels={() => setShowDropLabels((previous) => !previous)}
           onReset={onReset}
           feedbackMessage={dragFeedback ?? feedbackMessage}
         />
@@ -38,7 +38,7 @@ export function TreeTableDemo() {
           state={state}
           visibleRows={visibleRows}
           virtualizationEnabled={virtualizationEnabled}
-          showDropZones={showDropZones}
+          showDropLabels={showDropLabels}
           onToggleExpand={onToggleExpand}
           onMove={onMove}
           onDragFeedbackChange={setDragFeedback}

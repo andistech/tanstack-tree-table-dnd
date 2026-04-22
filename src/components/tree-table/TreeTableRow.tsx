@@ -28,7 +28,7 @@ interface TreeTableRowProps {
   tableRow: Row<VisibleRow>;
   preview: DndPreviewState;
   onToggleExpand: (id: string) => void;
-  showDropZones: boolean;
+  showDropLabels: boolean;
   focusedRowId: string | null;
   onFocusRow: (id: string) => void;
 }
@@ -37,7 +37,7 @@ export function TreeTableRow({
   tableRow,
   preview,
   onToggleExpand,
-  showDropZones,
+  showDropLabels,
   focusedRowId,
   onFocusRow,
 }: TreeTableRowProps) {
@@ -81,7 +81,7 @@ export function TreeTableRow({
               {isDropTarget && preview.mode ? (
                 <TreeTableDropIndicator mode={preview.mode} valid={preview.isValid} />
               ) : null}
-              {isDropTarget && preview.mode && preview.isValid ? (
+              {isDropTarget && preview.mode && preview.isValid && showDropLabels ? (
                 <span
                   className={cn(
                     'pointer-events-none absolute right-2 top-1 z-20 rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
@@ -100,7 +100,6 @@ export function TreeTableRow({
               <TreeTableCell
                 row={tableRow.original}
                 onToggleExpand={onToggleExpand}
-                showDropZones={showDropZones}
                 handle={{
                   attributes,
                   listeners,

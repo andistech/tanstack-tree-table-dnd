@@ -12,7 +12,7 @@ export function useTreeTable(initialState?: TreeState) {
   const [state, setState] = useState<TreeState>(seeded);
   const [lastMove, setLastMove] = useState<MoveNodeResult | null>(null);
   const [virtualizationEnabled, setVirtualizationEnabled] = useState(false);
-  const [showDropZones, setShowDropZones] = useState(false);
+  const [showDropLabels, setShowDropLabels] = useState(true);
 
   const visibleRows = useVisibleRows(state);
 
@@ -72,9 +72,9 @@ export function useTreeTable(initialState?: TreeState) {
     lastMove,
     feedbackMessage,
     virtualizationEnabled,
-    showDropZones,
+    showDropLabels,
     setVirtualizationEnabled,
-    setShowDropZones,
+    setShowDropLabels,
     onToggleExpand,
     onMove,
     onReset,

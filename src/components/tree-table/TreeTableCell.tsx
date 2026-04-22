@@ -8,7 +8,6 @@ import type { DraggableAttributes, DraggableSyntheticListeners } from '@dnd-kit/
 interface TreeTableCellProps {
   row: VisibleRow;
   onToggleExpand: (id: string) => void;
-  showDropZones: boolean;
   handle: {
     attributes: DraggableAttributes;
     listeners?: DraggableSyntheticListeners;
@@ -30,15 +29,11 @@ function NodeIcon({ kind }: { kind: VisibleRow['data']['kind'] }) {
   );
 }
 
-export function TreeTableCell({ row, onToggleExpand, showDropZones, handle }: TreeTableCellProps) {
+export function TreeTableCell({ row, onToggleExpand, handle }: TreeTableCellProps) {
   const leftPadding = row.depth * INDENT_PX;
 
   return (
     <div className="relative flex items-center gap-2 py-2" style={{ paddingLeft: `${leftPadding}px` }}>
-      {showDropZones ? (
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-2 rounded-sm bg-slate-100/70" aria-hidden="true" />
-      ) : null}
-
       <TreeTableDragHandle
         disabled={row.data.isDisabled}
         attributes={handle.attributes}

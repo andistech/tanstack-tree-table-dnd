@@ -1,8 +1,8 @@
 interface TreeTableToolbarProps {
   virtualizationEnabled: boolean;
   onToggleVirtualization: () => void;
-  showDropZones: boolean;
-  onToggleDropZones: () => void;
+  showDropLabels: boolean;
+  onToggleDropLabels: () => void;
   onReset: () => void;
   feedbackMessage: string | null;
 }
@@ -10,8 +10,8 @@ interface TreeTableToolbarProps {
 export function TreeTableToolbar({
   virtualizationEnabled,
   onToggleVirtualization,
-  showDropZones,
-  onToggleDropZones,
+  showDropLabels,
+  onToggleDropLabels,
   onReset,
   feedbackMessage,
 }: TreeTableToolbarProps) {
@@ -27,10 +27,10 @@ export function TreeTableToolbar({
 
       <button
         type="button"
-        onClick={onToggleDropZones}
+        onClick={onToggleDropLabels}
         className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
       >
-        Drop zones: {showDropZones ? 'On' : 'Off'}
+        Drop labels: {showDropLabels ? 'On' : 'Off'}
       </button>
 
       <button
