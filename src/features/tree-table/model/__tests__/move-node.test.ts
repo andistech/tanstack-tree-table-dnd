@@ -106,6 +106,20 @@ describe('moveNode', () => {
     expect(result.reason).toBe('Target row cannot accept children');
   });
 
+  it('rejects inside drop onto current parent', () => {
+    const state = createFixtureState();
+
+    const result = moveNode({
+      state,
+      dragId: 'a-1',
+      overId: 'root-a',
+      mode: 'inside',
+    });
+
+    expect(result.changed).toBe(false);
+    expect(result.reason).toBe('This row is already the current parent');
+  });
+
   it('adjusts index when moving downward within same parent', () => {
     const state = createFixtureState();
 

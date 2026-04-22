@@ -66,6 +66,10 @@ export function validateMove(args: ValidateMoveArgs): { valid: boolean; reason?:
       return { valid: false, reason: 'Missing inside target row' };
     }
 
+    if (overId === dragNode.parentId) {
+      return { valid: false, reason: 'This row is already the current parent' };
+    }
+
     if (!canNodeHaveChildren(overNode)) {
       return { valid: false, reason: 'Target row cannot accept children' };
     }
