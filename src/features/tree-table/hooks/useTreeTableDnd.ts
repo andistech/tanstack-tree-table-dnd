@@ -1,9 +1,14 @@
 import { useMemo, useState } from 'react';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 
+import {
+  DROP_INSIDE_ZONE_RATIO_DROPPABLE,
+  DROP_INSIDE_ZONE_RATIO_NON_DROPPABLE,
+} from '../../../components/tree-table/constants';
 import { resolveDropModeFromRects } from '../dnd/collision';
 import { useTreeTableSensors } from '../dnd/sensors';
 import { resolveDrop } from '../model/resolve-drop';
+import { canNodeHaveChildren } from '../model/tree-selectors';
 import { validateMove } from '../model/validation';
 import type { DndPreviewState } from '../dnd/dnd-types';
 import type { DropMode, TreeState, VisibleRow } from '../model/types';
@@ -58,7 +63,12 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
 
     const activeRect = event.active.rect.current.translated ?? event.active.rect.current.initial ?? null;
     const overRect = event.over?.rect ?? null;
-    const mode = resolveDropModeFromRects(activeRect, overRect);
+    const overNode = state.nodesById[overId];
+    const insideZoneRatio =
+      overNode && canNodeHaveChildren(overNode)
+        ? DROP_INSIDE_ZONE_RATIO_DROPPABLE
+        : DROP_INSIDE_ZONE_RATIO_NON_DROPPABLE;
+    const mode = resolveDropModeFromRects(activeRect, overRect, insideZoneRatio);
 
     const resolvedMove = resolveDrop(state, dragId, overId, mode);
     if (!resolvedMove) {
