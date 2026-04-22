@@ -96,12 +96,16 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
     }
 
     const overRect = event.over?.rect ?? null;
-    const fallbackRect = event.active.rect.current.translated ?? event.active.rect.current.initial ?? null;
+    const translatedRect = event.active.rect.current.translated ?? null;
+    const initialRect = event.active.rect.current.initial ?? null;
+    const fallbackRect = translatedRect ?? initialRect;
+    const pointerYFromRect = translatedRect ? translatedRect.top + translatedRect.height / 2 : null;
+    const pointerYFromDelta = dragStartClientY !== null ? dragStartClientY + event.delta.y : null;
     const pointerY =
-      dragStartClientY !== null
-        ? dragStartClientY + event.delta.y
-        : getEventClientY(event.activatorEvent) ??
-          (fallbackRect ? fallbackRect.top + fallbackRect.height / 2 : null);
+      pointerYFromRect ??
+      pointerYFromDelta ??
+      getEventClientY(event.activatorEvent) ??
+      (fallbackRect ? fallbackRect.top + fallbackRect.height / 2 : null);
     const mode = resolveDropModeFromPosition(overRect, pointerY);
     const relativeY = overRect && pointerY !== null ? (pointerY - overRect.top) / overRect.height : null;
 
@@ -138,6 +142,8 @@ export function useTreeTableDnd({ state, visibleRows, onMove }: UseTreeTableDndA
       overId,
       mode,
       pointerY,
+      pointerYFromRect,
+      pointerYFromDelta,
       relativeY,
       targetParentId: resolvedMove.targetParentId,
       targetIndex: resolvedMove.targetIndex,
