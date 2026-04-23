@@ -1,0 +1,178 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "react-tree-table",
+  "items": [
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "tree-table",
+      "type": "registry:block",
+      "title": "Tree Table",
+      "description": "Production-oriented hierarchical table with drag-and-drop reordering, reparenting, and virtualization-ready architecture.",
+      "dependencies": [
+        "react@^19",
+        "react-dom@^19",
+        "@tanstack/react-table@^8",
+        "@tanstack/react-virtual@^3",
+        "@dnd-kit/core@^6",
+        "@dnd-kit/sortable@^10",
+        "@dnd-kit/utilities@^3",
+        "@radix-ui/react-tooltip@^1",
+        "class-variance-authority@^0.7",
+        "clsx@^2",
+        "tailwind-merge@^3"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/tree-table.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/tree-table.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTable.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTable.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableCell.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableCell.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableDebugPanel.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableDebugPanel.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableDemo.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableDemo.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableDragHandle.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableDragHandle.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableDropIndicator.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableDropIndicator.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableHeader.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableHeader.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableRow.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableRow.tsx"
+        },
+        {
+          "path": "src/components/tree-table/TreeTableToolbar.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/TreeTableToolbar.tsx"
+        },
+        {
+          "path": "src/components/tree-table/columns.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/columns.tsx"
+        },
+        {
+          "path": "src/components/tree-table/constants.ts",
+          "type": "registry:file",
+          "target": "src/components/tree-table/constants.ts"
+        },
+        {
+          "path": "src/components/tree-table/icons.tsx",
+          "type": "registry:file",
+          "target": "src/components/tree-table/icons.tsx"
+        },
+        {
+          "path": "src/components/tree-table/types.ts",
+          "type": "registry:file",
+          "target": "src/components/tree-table/types.ts"
+        },
+        {
+          "path": "src/features/tree-table/demo/demo-data.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/demo/demo-data.ts"
+        },
+        {
+          "path": "src/features/tree-table/dnd/collision.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/dnd/collision.ts"
+        },
+        {
+          "path": "src/features/tree-table/dnd/dnd-types.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/dnd/dnd-types.ts"
+        },
+        {
+          "path": "src/features/tree-table/dnd/drag-overlay.tsx",
+          "type": "registry:file",
+          "target": "src/features/tree-table/dnd/drag-overlay.tsx"
+        },
+        {
+          "path": "src/features/tree-table/dnd/sensors.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/dnd/sensors.ts"
+        },
+        {
+          "path": "src/features/tree-table/hooks/useTreeTable.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/hooks/useTreeTable.ts"
+        },
+        {
+          "path": "src/features/tree-table/hooks/useTreeTableDnd.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/hooks/useTreeTableDnd.ts"
+        },
+        {
+          "path": "src/features/tree-table/hooks/useVisibleRows.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/hooks/useVisibleRows.ts"
+        },
+        {
+          "path": "src/features/tree-table/model/move-node.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/model/move-node.ts"
+        },
+        {
+          "path": "src/features/tree-table/model/resolve-drop.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/model/resolve-drop.ts"
+        },
+        {
+          "path": "src/features/tree-table/model/tree-selectors.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/model/tree-selectors.ts"
+        },
+        {
+          "path": "src/features/tree-table/model/tree-state.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/model/tree-state.ts"
+        },
+        {
+          "path": "src/features/tree-table/model/types.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/model/types.ts"
+        },
+        {
+          "path": "src/features/tree-table/model/validation.ts",
+          "type": "registry:file",
+          "target": "src/features/tree-table/model/validation.ts"
+        },
+        {
+          "path": "src/lib/cn.ts",
+          "type": "registry:file",
+          "target": "src/lib/cn.ts"
+        },
+        {
+          "path": "src/lib/format.ts",
+          "type": "registry:file",
+          "target": "src/lib/format.ts"
+        }
+      ]
+    }
+  ]
+}

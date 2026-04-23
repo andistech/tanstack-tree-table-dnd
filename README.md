@@ -55,3 +55,24 @@ Source: `src/features/tree-table/model/move-node.ts`
 - Invalid drop highlighting and rejection reasons
 - Optional row virtualization toggle
 - Debug inspector for canonical state and last move
+
+## Shareable distribution (shadcn registry)
+
+This repo includes a custom shadcn registry setup for this component:
+
+- [`registry.json`](registry.json)
+- [`registry/tree-table.json`](registry/tree-table.json)
+
+The registry item declares npm dependencies so `shadcn` can install them automatically.
+
+### Install from a hosted registry item
+
+Host this repository (or a static export that includes `registry/`, `registry.json`, and the referenced `src/` files), then run:
+
+```bash
+bunx shadcn@latest add https://<your-host>/registry/tree-table.json
+```
+
+After install, the entry file is copied to:
+
+- `src/components/ui/tree-table.tsx`
