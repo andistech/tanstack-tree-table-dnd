@@ -29,6 +29,11 @@
       "target": "src/components/tree-table/TreeTable.tsx"
     },
     {
+      "path": "src/components/tree-table/api-types.ts",
+      "type": "registry:file",
+      "target": "src/components/tree-table/api-types.ts"
+    },
+    {
       "path": "src/components/tree-table/TreeTableCell.tsx",
       "type": "registry:file",
       "target": "src/components/tree-table/TreeTableCell.tsx"

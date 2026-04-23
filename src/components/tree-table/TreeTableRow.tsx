@@ -3,6 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { cva } from 'class-variance-authority';
 import { flexRender, type Row } from '@tanstack/react-table';
 
+import type { TreeTableCellRenderer, TreeTableColumnMeta } from './api-types';
 import { TreeTableCell } from './TreeTableCell';
 import { TreeTableDropIndicator } from './TreeTableDropIndicator';
 import { cn } from '../../lib/cn';
@@ -33,6 +34,8 @@ const rowVariants = cva('border-b border-slate-200 text-sm transition-colors', {
 interface TreeTableRowProps {
   tableRow: Row<VisibleRow>;
   preview: DndPreviewState;
+  treeColumnId: string;
+  renderTreeCell?: TreeTableCellRenderer;
   onToggleExpand: (id: string) => void;
   dropHintMode: DropHintMode;
   focusedRowId: string | null;
@@ -42,6 +45,8 @@ interface TreeTableRowProps {
 export function TreeTableRow({
   tableRow,
   preview,
+  treeColumnId,
+  renderTreeCell,
   onToggleExpand,
   dropHintMode,
   focusedRowId,
@@ -106,12 +111,20 @@ export function TreeTableRow({
       onFocus={() => onFocusRow(tableRow.original.id)}
     >
       {tableRow.getVisibleCells().map((cell) => {
-        if (cell.column.id === 'tree') {
+        const meta = cell.column.columnDef.meta as TreeTableColumnMeta | undefined;
+        const handleBindings = {
+          attributes,
+          listeners,
+          setActivatorNodeRef,
+        };
+
+        if (cell.column.id === treeColumnId) {
           return (
             <td
               key={cell.id}
               className={cn(
                 'relative min-w-[360px] px-2 py-0',
+                meta?.cellClassName,
                 showMinimalBeforeLine && 'border-t-2 border-cyan-500',
                 showMinimalAfterLine && 'border-b-2 border-cyan-500',
                 showGrayBeforeLine && 'border-t-2 border-slate-500',
@@ -137,15 +150,19 @@ export function TreeTableRow({
                       : 'Insert below'}
                 </span>
               ) : null}
-              <TreeTableCell
-                row={tableRow.original}
-                onToggleExpand={onToggleExpand}
-                handle={{
-                  attributes,
-                  listeners,
-                  setActivatorNodeRef,
-                }}
-              />
+              {renderTreeCell
+                ? renderTreeCell({
+                    row: tableRow.original,
+                    onToggleExpand,
+                    handle: handleBindings,
+                  })
+                : (
+                    <TreeTableCell
+                      row={tableRow.original}
+                      onToggleExpand={onToggleExpand}
+                      handle={handleBindings}
+                    />
+                  )}
             </td>
           );
         }
@@ -155,6 +172,7 @@ export function TreeTableRow({
             key={cell.id}
             className={cn(
               'px-3 py-2 text-slate-700',
+              meta?.cellClassName,
               showMinimalBeforeLine && 'border-t-2 border-cyan-500',
               showMinimalAfterLine && 'border-b-2 border-cyan-500',
               showGrayBeforeLine && 'border-t-2 border-slate-500',

@@ -1,9 +1,23 @@
 /* eslint-disable react-refresh/only-export-components */
 export { TreeTable } from '../tree-table/TreeTable';
 export { TreeTableDemo } from '../tree-table/TreeTableDemo';
+export { TreeTableCell } from '../tree-table/TreeTableCell';
+export { TreeTableDragHandle } from '../tree-table/TreeTableDragHandle';
+export { TreeTableDropIndicator } from '../tree-table/TreeTableDropIndicator';
+export { TreeTableHeader } from '../tree-table/TreeTableHeader';
+export { TreeTableRow } from '../tree-table/TreeTableRow';
 export {
   treeTableColumns,
 } from '../tree-table/columns';
+export type {
+  TreeTableCellRenderContext,
+  TreeTableCellRenderer,
+  TreeTableColumnDef,
+  TreeTableColumnMeta,
+  TreeTableDragHandleBindings,
+  TreeTableOverlayRenderContext,
+  TreeTableOverlayRenderer,
+} from '../tree-table/api-types';
 export type {
   DropMode,
   MoveNodeInput,
@@ -15,6 +29,8 @@ export type {
   TreeState,
   VisibleRow,
 } from '../tree-table/types';
+export type { TreeTableProps } from '../tree-table/TreeTable';
+export type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
 
 export { useTreeTable } from '../../features/tree-table/hooks/useTreeTable';
 export { useTreeTableDnd } from '../../features/tree-table/hooks/useTreeTableDnd';

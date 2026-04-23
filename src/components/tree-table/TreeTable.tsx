@@ -4,22 +4,34 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
+import type {
+  TreeTableCellRenderer,
+  TreeTableColumnDef,
+  TreeTableOverlayRenderer,
+} from './api-types';
 import { treeTableColumns } from './columns';
 import { ROW_HEIGHT_PX } from './constants';
 import { TreeTableHeader } from './TreeTableHeader';
 import { TreeTableRow } from './TreeTableRow';
+import { cn } from '../../lib/cn';
 import { treeTableCollisionDetection } from '../../features/tree-table/dnd/collision';
 import { useTreeTableDnd } from '../../features/tree-table/hooks/useTreeTableDnd';
 import { TreeTableDragOverlay } from '../../features/tree-table/dnd/drag-overlay';
 import type { DropMode, TreeState, VisibleRow } from '../../features/tree-table/model/types';
 import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
 
-interface TreeTableProps {
+export interface TreeTableProps {
   state: TreeState;
   visibleRows: VisibleRow[];
+  columns?: TreeTableColumnDef[];
+  treeColumnId?: string;
+  renderTreeCell?: TreeTableCellRenderer;
+  renderDragOverlay?: TreeTableOverlayRenderer;
   virtualizationEnabled: boolean;
   dropHintMode: DropHintMode;
   overlayOpacity: number;
+  containerClassName?: string;
+  tableClassName?: string;
   onToggleExpand: (id: string) => void;
   onMove: (dragId: string, overId: string | null, mode: DropMode) => void;
   onDragFeedbackChange?: (message: string | null) => void;
@@ -28,9 +40,15 @@ interface TreeTableProps {
 export function TreeTable({
   state,
   visibleRows,
+  columns = treeTableColumns,
+  treeColumnId = 'tree',
+  renderTreeCell,
+  renderDragOverlay,
   virtualizationEnabled,
   dropHintMode,
   overlayOpacity,
+  containerClassName,
+  tableClassName,
   onToggleExpand,
   onMove,
   onDragFeedbackChange,
@@ -41,12 +59,13 @@ export function TreeTable({
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: visibleRows,
-    columns: treeTableColumns,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => row.id,
   });
 
   const tableRows = table.getRowModel().rows;
+  const visibleColumnCount = table.getVisibleLeafColumns().length;
 
   const rowVirtualizer = useVirtualizer({
     count: tableRows.length,
@@ -122,14 +141,17 @@ export function TreeTable({
       <SortableContext items={rowIds} strategy={verticalListSortingStrategy}>
         <div
           ref={containerRef}
-          className="max-h-[560px] overflow-auto rounded-lg border border-slate-200 bg-white shadow-sm"
+          className={cn(
+            'max-h-[560px] overflow-auto rounded-lg border border-slate-200 bg-white shadow-sm',
+            containerClassName,
+          )}
         >
-          <table className="min-w-full border-collapse">
+          <table className={cn('min-w-full border-collapse', tableClassName)}>
             <TreeTableHeader headerGroups={table.getHeaderGroups()} />
             <tbody>
               {paddingTop > 0 ? (
                 <tr>
-                  <td colSpan={treeTableColumns.length} style={{ height: `${paddingTop}px` }} />
+                  <td colSpan={visibleColumnCount} style={{ height: `${paddingTop}px` }} />
                 </tr>
               ) : null}
 
@@ -145,6 +167,8 @@ export function TreeTable({
                     key={tableRow.id}
                     tableRow={tableRow}
                     preview={preview}
+                    treeColumnId={treeColumnId}
+                    renderTreeCell={renderTreeCell}
                     onToggleExpand={onToggleExpand}
                     dropHintMode={dropHintMode}
                     focusedRowId={focusedRowId}
@@ -155,7 +179,7 @@ export function TreeTable({
 
               {paddingBottom > 0 ? (
                 <tr>
-                  <td colSpan={treeTableColumns.length} style={{ height: `${paddingBottom}px` }} />
+                  <td colSpan={visibleColumnCount} style={{ height: `${paddingBottom}px` }} />
                 </tr>
               ) : null}
             </tbody>
@@ -164,7 +188,11 @@ export function TreeTable({
       </SortableContext>
 
       <DragOverlay>
-        {activeRow ? <TreeTableDragOverlay row={activeRow} overlayOpacity={overlayOpacity} /> : null}
+        {activeRow
+          ? renderDragOverlay
+            ? renderDragOverlay({ row: activeRow, overlayOpacity })
+            : <TreeTableDragOverlay row={activeRow} overlayOpacity={overlayOpacity} />
+          : null}
       </DragOverlay>
     </DndContext>
   );
