@@ -1,5 +1,7 @@
 # React Tree Table Demo
 
+[![Demo](https://img.shields.io/badge/demo-live-0ea5e9)](https://andistech.github.io/tanstack-tree-table-dnd/)
+
 Production-oriented TreeTable prototype built with:
 
 - Bun
@@ -10,6 +12,10 @@ Production-oriented TreeTable prototype built with:
 - TanStack Table v8
 - TanStack Virtual v3
 - dnd-kit (`@dnd-kit/core`, `@dnd-kit/sortable`)
+
+## Live demo
+
+- https://andistech.github.io/tanstack-tree-table-dnd/
 
 ## Run
 
