@@ -23,12 +23,15 @@ A reusable React Tree Table with drag-and-drop reordering and reparenting, built
 Preferred distribution is via a shadcn registry item.
 
 ```bash
-bunx shadcn@latest add https://<your-host>/registry/tree-table.json
+bunx shadcn@latest add https://andistech.github.io/tanstack-tree-table-dnd/r/tree-table.json
 ```
 
 Installed entrypoint:
 
 - `src/components/ui/tree-table.tsx`
+
+The installer also copies required source files (tree model, hooks, DnD logic)
+into your project and installs declared dependencies.
 
 ## Basic usage
 
@@ -82,6 +85,11 @@ export function Example() {
 
 - `registry.json`
 - `registry/tree-table.json`
+
+Published registry artifacts (from GitHub Pages build):
+
+- `https://andistech.github.io/tanstack-tree-table-dnd/r/registry.json`
+- `https://andistech.github.io/tanstack-tree-table-dnd/r/tree-table.json`
 
 ## Contributing
 

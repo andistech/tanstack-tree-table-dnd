@@ -69,10 +69,21 @@ Registry config files:
 - `registry.json`
 - `registry/tree-table.json`
 
-To use in another project (after hosting these files):
+Build installable shadcn registry artifacts:
 
 ```bash
-bunx shadcn@latest add https://<your-host>/registry/tree-table.json
+bun run registry:build
+```
+
+Generated output:
+
+- `public/r/registry.json`
+- `public/r/tree-table.json`
+
+Install URL for consumers:
+
+```bash
+bunx shadcn@latest add https://andistech.github.io/tanstack-tree-table-dnd/r/tree-table.json
 ```
 
 ## Demo deployment
@@ -82,6 +93,7 @@ GitHub Pages workflow file:
 - `.github/workflows/deploy-pages.yml`
 
 It builds via Bun and deploys `dist/` on pushes to `main`.
+The workflow also builds the shadcn registry JSON before `vite build`.
 
 ## Commit format
 

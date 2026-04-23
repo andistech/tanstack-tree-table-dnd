@@ -1,9 +1,9 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "react-tree-table",
+  "homepage": "https://andistech.github.io/tanstack-tree-table-dnd/",
   "items": [
     {
-      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "tree-table",
       "type": "registry:block",
       "title": "Tree Table",
