@@ -8,11 +8,11 @@ export default function App() {
           React 19 + TanStack + dnd-kit
         </p>
         <h1 className="font-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-          TreeTable Prototype
+          Tree Table Component Demo
         </h1>
         <p className="mt-2 max-w-3xl text-sm text-slate-600 md:text-base">
-          Drag rows to reorder siblings, or drop onto allowed rows to reparent. Invalid targets are blocked,
-          descendant cycles are prevented, and the canonical state remains normalized.
+          Demo and reference implementation for a reusable tree table. Drag rows to reorder or reparent,
+          inspect drop hint modes, and validate constraints in real time.
         </p>
       </header>
 

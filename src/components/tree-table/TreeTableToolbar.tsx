@@ -35,54 +35,59 @@ export function TreeTableToolbar({
           : 'Grayed Rows';
 
   return (
-    <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-3 backdrop-blur-sm">
-      <button
-        type="button"
-        onClick={onToggleVirtualization}
-        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-      >
-        Virtualization: {virtualizationEnabled ? 'On' : 'Off'}
-      </button>
+    <div className="border-b border-slate-200 bg-white/90 px-3 py-3 backdrop-blur-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={onToggleVirtualization}
+          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Virtualization: {virtualizationEnabled ? 'On' : 'Off'}
+        </button>
 
-      <button
-        type="button"
-        onClick={onCycleDropHintMode}
-        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-      >
-        Drop hints: {dropHintModeLabel}
-      </button>
+        <button
+          type="button"
+          onClick={onCycleDropHintMode}
+          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Drop hints: {dropHintModeLabel}
+        </button>
 
-      <button
-        type="button"
-        onClick={onToggleAutoExpandDropParent}
-        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-      >
-        Auto-expand parent: {autoExpandDropParent ? 'On' : 'Off'}
-      </button>
+        <button
+          type="button"
+          onClick={onToggleAutoExpandDropParent}
+          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Auto-expand parent: {autoExpandDropParent ? 'On' : 'Off'}
+        </button>
 
-      <label className="flex items-center gap-2 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700">
-        Overlay opacity
-        <input
-          type="range"
-          min={0.2}
-          max={1}
-          step={0.05}
-          value={overlayOpacity}
-          onChange={(event) => onOverlayOpacityChange(Number(event.target.value))}
-          className="w-28 accent-slate-700"
-        />
-        <span className="w-8 text-right text-xs tabular-nums">{Math.round(overlayOpacity * 100)}%</span>
-      </label>
+        <label className="flex items-center gap-2 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700">
+          Overlay opacity
+          <input
+            type="range"
+            min={0.2}
+            max={1}
+            step={0.05}
+            value={overlayOpacity}
+            onChange={(event) => onOverlayOpacityChange(Number(event.target.value))}
+            className="w-28 accent-slate-700"
+          />
+          <span className="w-8 text-right text-xs tabular-nums">{Math.round(overlayOpacity * 100)}%</span>
+        </label>
 
-      <button
-        type="button"
-        onClick={onReset}
-        className="rounded-md border border-amber-400 bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
-      >
-        Reset demo data
-      </button>
+        <button
+          type="button"
+          onClick={onReset}
+          className="rounded-md border border-amber-400 bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
+        >
+          Reset demo data
+        </button>
+      </div>
 
-      <div className="ml-auto text-sm text-slate-600">{feedbackMessage ?? 'Ready'}</div>
+      <div className="mt-3 border-t border-slate-200 pt-2 text-sm">
+        <span className="font-semibold text-slate-700">Drag status: </span>
+        <span className="text-slate-600">{feedbackMessage ?? 'Ready'}</span>
+      </div>
     </div>
   );
 }

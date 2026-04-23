@@ -56,6 +56,21 @@ Source: `src/features/tree-table/model/move-node.ts`
 - Optional row virtualization toggle
 - Debug inspector for canonical state and last move
 
+## Component customization
+
+`TreeTable` supports consumer-driven layout and rendering:
+
+- Pass custom TanStack columns via the `columns` prop
+- Customize tree column rendering via `renderTreeCell`
+- Customize drag overlay via `renderDragOverlay`
+- Style per-column headers/cells via column `meta`:
+  - `meta.headerClassName`
+  - `meta.cellClassName`
+
+Example entrypoint exports live at:
+
+- `src/components/ui/tree-table.tsx`
+
 ## Shareable distribution (shadcn registry)
 
 This repo includes a custom shadcn registry setup for this component:
@@ -76,3 +91,7 @@ bunx shadcn@latest add https://<your-host>/registry/tree-table.json
 After install, the entry file is copied to:
 
 - `src/components/ui/tree-table.tsx`
+
+## Demo hosting (GitHub Pages)
+
+Yes, the demo can be hosted on GitHub Pages because it is a static Vite build (`dist/`).
