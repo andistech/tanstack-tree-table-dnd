@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { TreeTable } from './TreeTable';
 import { TreeTableDebugPanel } from './TreeTableDebugPanel';
 import { TreeTableToolbar } from './TreeTableToolbar';
-import { useTreeTable } from '../../features/tree-table/hooks/useTreeTable';
+import { useTreeTable, type DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
 
 export function TreeTableDemo() {
   const {
@@ -12,10 +12,12 @@ export function TreeTableDemo() {
     lastMove,
     feedbackMessage,
     virtualizationEnabled,
-    showDropLabels,
+    dropHintMode,
+    overlayOpacity,
     autoExpandDropParent,
     setVirtualizationEnabled,
-    setShowDropLabels,
+    setDropHintMode,
+    setOverlayOpacity,
     setAutoExpandDropParent,
     onToggleExpand,
     onMove,
@@ -24,14 +26,26 @@ export function TreeTableDemo() {
 
   const [dragFeedback, setDragFeedback] = useState<string | null>(null);
 
+  const dropHintModeCycle: DropHintMode[] = ['off', 'labels', 'minimal'];
+
+  function onCycleDropHintMode(): void {
+    setDropHintMode((previous) => {
+      const currentIndex = dropHintModeCycle.indexOf(previous);
+      const nextIndex = (currentIndex + 1) % dropHintModeCycle.length;
+      return dropHintModeCycle[nextIndex];
+    });
+  }
+
   return (
     <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div className="space-y-3">
         <TreeTableToolbar
           virtualizationEnabled={virtualizationEnabled}
           onToggleVirtualization={() => setVirtualizationEnabled((previous) => !previous)}
-          showDropLabels={showDropLabels}
-          onToggleDropLabels={() => setShowDropLabels((previous) => !previous)}
+          dropHintMode={dropHintMode}
+          onCycleDropHintMode={onCycleDropHintMode}
+          overlayOpacity={overlayOpacity}
+          onOverlayOpacityChange={setOverlayOpacity}
           autoExpandDropParent={autoExpandDropParent}
           onToggleAutoExpandDropParent={() => setAutoExpandDropParent((previous) => !previous)}
           onReset={onReset}
@@ -42,7 +56,8 @@ export function TreeTableDemo() {
           state={state}
           visibleRows={visibleRows}
           virtualizationEnabled={virtualizationEnabled}
-          showDropLabels={showDropLabels}
+          dropHintMode={dropHintMode}
+          overlayOpacity={overlayOpacity}
           onToggleExpand={onToggleExpand}
           onMove={onMove}
           onDragFeedbackChange={setDragFeedback}

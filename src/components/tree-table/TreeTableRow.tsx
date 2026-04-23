@@ -7,6 +7,7 @@ import { TreeTableDropIndicator } from './TreeTableDropIndicator';
 import { cn } from '../../lib/cn';
 import type { DndPreviewState } from '../../features/tree-table/dnd/dnd-types';
 import type { VisibleRow } from '../../features/tree-table/model/types';
+import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
 
 const rowVariants = cva('border-b border-slate-200 text-sm transition-colors', {
   variants: {
@@ -28,7 +29,7 @@ interface TreeTableRowProps {
   tableRow: Row<VisibleRow>;
   preview: DndPreviewState;
   onToggleExpand: (id: string) => void;
-  showDropLabels: boolean;
+  dropHintMode: DropHintMode;
   focusedRowId: string | null;
   onFocusRow: (id: string) => void;
 }
@@ -37,7 +38,7 @@ export function TreeTableRow({
   tableRow,
   preview,
   onToggleExpand,
-  showDropLabels,
+  dropHintMode,
   focusedRowId,
   onFocusRow,
 }: TreeTableRowProps) {
@@ -53,12 +54,14 @@ export function TreeTableRow({
   });
 
   const isDropTarget = preview.overId === tableRow.original.id;
+  const suppressInsideValidBorder = dropHintMode === 'minimal' && preview.mode === 'inside' && preview.isValid;
+  const shouldUseSiblingBackground = dropHintMode !== 'minimal';
   const stateVariant =
     !preview.isValid && isDropTarget
       ? 'invalid'
       : preview.isValid && isDropTarget && preview.mode === 'inside'
         ? 'dropInsideValid'
-        : preview.isValid && isDropTarget && preview.mode
+        : preview.isValid && isDropTarget && preview.mode && shouldUseSiblingBackground
           ? 'dropSiblingValid'
           : isDragging
             ? 'dragging'
@@ -78,10 +81,10 @@ export function TreeTableRow({
         if (cell.column.id === 'tree') {
           return (
             <td key={cell.id} className="relative min-w-[360px] px-2 py-0">
-              {isDropTarget && preview.mode ? (
+              {isDropTarget && preview.mode && !suppressInsideValidBorder ? (
                 <TreeTableDropIndicator mode={preview.mode} valid={preview.isValid} />
               ) : null}
-              {isDropTarget && preview.mode && preview.isValid && showDropLabels ? (
+              {isDropTarget && preview.mode && preview.isValid && dropHintMode === 'labels' ? (
                 <span
                   className={cn(
                     'pointer-events-none absolute right-2 top-1 z-20 rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',

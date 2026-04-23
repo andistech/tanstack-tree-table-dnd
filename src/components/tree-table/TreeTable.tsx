@@ -12,12 +12,14 @@ import { treeTableCollisionDetection } from '../../features/tree-table/dnd/colli
 import { useTreeTableDnd } from '../../features/tree-table/hooks/useTreeTableDnd';
 import { TreeTableDragOverlay } from '../../features/tree-table/dnd/drag-overlay';
 import type { DropMode, TreeState, VisibleRow } from '../../features/tree-table/model/types';
+import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
 
 interface TreeTableProps {
   state: TreeState;
   visibleRows: VisibleRow[];
   virtualizationEnabled: boolean;
-  showDropLabels: boolean;
+  dropHintMode: DropHintMode;
+  overlayOpacity: number;
   onToggleExpand: (id: string) => void;
   onMove: (dragId: string, overId: string | null, mode: DropMode) => void;
   onDragFeedbackChange?: (message: string | null) => void;
@@ -27,7 +29,8 @@ export function TreeTable({
   state,
   visibleRows,
   virtualizationEnabled,
-  showDropLabels,
+  dropHintMode,
+  overlayOpacity,
   onToggleExpand,
   onMove,
   onDragFeedbackChange,
@@ -143,7 +146,7 @@ export function TreeTable({
                     tableRow={tableRow}
                     preview={preview}
                     onToggleExpand={onToggleExpand}
-                    showDropLabels={showDropLabels}
+                    dropHintMode={dropHintMode}
                     focusedRowId={focusedRowId}
                     onFocusRow={setFocusedRowId}
                   />
@@ -160,7 +163,9 @@ export function TreeTable({
         </div>
       </SortableContext>
 
-      <DragOverlay>{activeRow ? <TreeTableDragOverlay row={activeRow} /> : null}</DragOverlay>
+      <DragOverlay>
+        {activeRow ? <TreeTableDragOverlay row={activeRow} overlayOpacity={overlayOpacity} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 }

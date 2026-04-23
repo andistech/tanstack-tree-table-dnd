@@ -1,8 +1,12 @@
+import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
+
 interface TreeTableToolbarProps {
   virtualizationEnabled: boolean;
   onToggleVirtualization: () => void;
-  showDropLabels: boolean;
-  onToggleDropLabels: () => void;
+  dropHintMode: DropHintMode;
+  onCycleDropHintMode: () => void;
+  overlayOpacity: number;
+  onOverlayOpacityChange: (value: number) => void;
   autoExpandDropParent: boolean;
   onToggleAutoExpandDropParent: () => void;
   onReset: () => void;
@@ -12,13 +16,18 @@ interface TreeTableToolbarProps {
 export function TreeTableToolbar({
   virtualizationEnabled,
   onToggleVirtualization,
-  showDropLabels,
-  onToggleDropLabels,
+  dropHintMode,
+  onCycleDropHintMode,
+  overlayOpacity,
+  onOverlayOpacityChange,
   autoExpandDropParent,
   onToggleAutoExpandDropParent,
   onReset,
   feedbackMessage,
 }: TreeTableToolbarProps) {
+  const dropHintModeLabel =
+    dropHintMode === 'off' ? 'Off' : dropHintMode === 'labels' ? 'Labels' : 'Minimal';
+
   return (
     <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-3 backdrop-blur-sm">
       <button
@@ -31,10 +40,10 @@ export function TreeTableToolbar({
 
       <button
         type="button"
-        onClick={onToggleDropLabels}
+        onClick={onCycleDropHintMode}
         className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
       >
-        Drop labels: {showDropLabels ? 'On' : 'Off'}
+        Drop hints: {dropHintModeLabel}
       </button>
 
       <button
@@ -44,6 +53,20 @@ export function TreeTableToolbar({
       >
         Auto-expand parent: {autoExpandDropParent ? 'On' : 'Off'}
       </button>
+
+      <label className="flex items-center gap-2 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700">
+        Overlay opacity
+        <input
+          type="range"
+          min={0.2}
+          max={1}
+          step={0.05}
+          value={overlayOpacity}
+          onChange={(event) => onOverlayOpacityChange(Number(event.target.value))}
+          className="w-28 accent-slate-700"
+        />
+        <span className="w-8 text-right text-xs tabular-nums">{Math.round(overlayOpacity * 100)}%</span>
+      </label>
 
       <button
         type="button"

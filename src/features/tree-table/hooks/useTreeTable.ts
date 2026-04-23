@@ -6,13 +6,16 @@ import { setExpanded, toggleExpanded } from '../model/tree-state';
 import type { DropMode, MoveNodeResult, TreeState } from '../model/types';
 import { useVisibleRows } from './useVisibleRows';
 
+export type DropHintMode = 'off' | 'labels' | 'minimal';
+
 export function useTreeTable(initialState?: TreeState) {
   const seeded = useMemo(() => initialState ?? createDemoTreeState(), [initialState]);
 
   const [state, setState] = useState<TreeState>(seeded);
   const [lastMove, setLastMove] = useState<MoveNodeResult | null>(null);
   const [virtualizationEnabled, setVirtualizationEnabled] = useState(false);
-  const [showDropLabels, setShowDropLabels] = useState(true);
+  const [dropHintMode, setDropHintMode] = useState<DropHintMode>('labels');
+  const [overlayOpacity, setOverlayOpacity] = useState(0.9);
   const [autoExpandDropParent, setAutoExpandDropParent] = useState(true);
 
   const visibleRows = useVisibleRows(state);
@@ -87,10 +90,12 @@ export function useTreeTable(initialState?: TreeState) {
     lastMove,
     feedbackMessage,
     virtualizationEnabled,
-    showDropLabels,
+    dropHintMode,
+    overlayOpacity,
     autoExpandDropParent,
     setVirtualizationEnabled,
-    setShowDropLabels,
+    setDropHintMode,
+    setOverlayOpacity,
     setAutoExpandDropParent,
     onToggleExpand,
     onMove,
