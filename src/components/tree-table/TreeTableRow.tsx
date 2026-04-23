@@ -17,6 +17,7 @@ const rowVariants = cva('border-b border-slate-200 text-sm transition-colors', {
       focused: 'bg-amber-50/60',
       invalid: 'bg-rose-50/70',
       dropInsideValid: 'bg-emerald-50 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.55)]',
+      dropInsideMinimal: 'bg-emerald-50',
       dropSiblingValid: 'bg-cyan-50/70',
     },
   },
@@ -54,12 +55,18 @@ export function TreeTableRow({
   });
 
   const isDropTarget = preview.overId === tableRow.original.id;
-  const suppressInsideValidBorder = dropHintMode === 'minimal' && preview.mode === 'inside' && preview.isValid;
+  const suppressInsideBorder = dropHintMode === 'minimal' && preview.mode === 'inside';
+  const showMinimalBeforeLine =
+    dropHintMode === 'minimal' && isDropTarget && preview.isValid && preview.mode === 'before';
+  const showMinimalAfterLine =
+    dropHintMode === 'minimal' && isDropTarget && preview.isValid && preview.mode === 'after';
   const shouldUseSiblingBackground = dropHintMode !== 'minimal';
   const stateVariant =
     !preview.isValid && isDropTarget
       ? 'invalid'
-      : preview.isValid && isDropTarget && preview.mode === 'inside'
+      : preview.isValid && isDropTarget && preview.mode === 'inside' && dropHintMode === 'minimal'
+        ? 'dropInsideMinimal'
+        : preview.isValid && isDropTarget && preview.mode === 'inside'
         ? 'dropInsideValid'
         : preview.isValid && isDropTarget && preview.mode && shouldUseSiblingBackground
           ? 'dropSiblingValid'
@@ -80,8 +87,15 @@ export function TreeTableRow({
       {tableRow.getVisibleCells().map((cell) => {
         if (cell.column.id === 'tree') {
           return (
-            <td key={cell.id} className="relative min-w-[360px] px-2 py-0">
-              {isDropTarget && preview.mode && !suppressInsideValidBorder ? (
+            <td
+              key={cell.id}
+              className={cn(
+                'relative min-w-[360px] px-2 py-0',
+                showMinimalBeforeLine && 'border-t-2 border-cyan-500',
+                showMinimalAfterLine && 'border-b-2 border-cyan-500',
+              )}
+            >
+              {isDropTarget && preview.mode && dropHintMode !== 'minimal' && !suppressInsideBorder ? (
                 <TreeTableDropIndicator mode={preview.mode} valid={preview.isValid} />
               ) : null}
               {isDropTarget && preview.mode && preview.isValid && dropHintMode === 'labels' ? (
@@ -114,7 +128,14 @@ export function TreeTableRow({
         }
 
         return (
-          <td key={cell.id} className="px-3 py-2 text-slate-700">
+          <td
+            key={cell.id}
+            className={cn(
+              'px-3 py-2 text-slate-700',
+              showMinimalBeforeLine && 'border-t-2 border-cyan-500',
+              showMinimalAfterLine && 'border-b-2 border-cyan-500',
+            )}
+          >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         );
