@@ -60,15 +60,14 @@ export function TreeTableRow({
     dropHintMode === 'minimal' && isDropTarget && preview.isValid && preview.mode === 'before';
   const showMinimalAfterLine =
     dropHintMode === 'minimal' && isDropTarget && preview.isValid && preview.mode === 'after';
-  const shouldUseSiblingBackground = dropHintMode !== 'minimal';
   const stateVariant =
     !preview.isValid && isDropTarget
       ? 'invalid'
       : preview.isValid && isDropTarget && preview.mode === 'inside' && dropHintMode === 'minimal'
         ? 'dropInsideMinimal'
         : preview.isValid && isDropTarget && preview.mode === 'inside'
-        ? 'dropInsideValid'
-        : preview.isValid && isDropTarget && preview.mode && shouldUseSiblingBackground
+          ? 'dropInsideValid'
+        : preview.isValid && isDropTarget && preview.mode
           ? 'dropSiblingValid'
           : isDragging
             ? 'dragging'
