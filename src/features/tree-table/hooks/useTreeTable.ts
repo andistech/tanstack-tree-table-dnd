@@ -6,7 +6,7 @@ import { setExpanded, toggleExpanded } from '../model/tree-state';
 import type { DropMode, MoveNodeResult, TreeState } from '../model/types';
 import { useVisibleRows } from './useVisibleRows';
 
-export type DropHintMode = 'off' | 'labels' | 'minimal';
+export type DropHintMode = 'off' | 'labels' | 'minimal' | 'gray';
 
 export function useTreeTable(initialState?: TreeState) {
   const seeded = useMemo(() => initialState ?? createDemoTreeState(), [initialState]);

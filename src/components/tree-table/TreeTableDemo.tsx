@@ -26,7 +26,7 @@ export function TreeTableDemo() {
 
   const [dragFeedback, setDragFeedback] = useState<string | null>(null);
 
-  const dropHintModeCycle: DropHintMode[] = ['off', 'labels', 'minimal'];
+  const dropHintModeCycle: DropHintMode[] = ['off', 'labels', 'minimal', 'gray'];
 
   function onCycleDropHintMode(): void {
     setDropHintMode((previous) => {
