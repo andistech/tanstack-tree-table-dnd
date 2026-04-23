@@ -26,7 +26,11 @@ export function TreeTableToolbar({
   feedbackMessage,
 }: TreeTableToolbarProps) {
   const dropHintModeLabel =
-    dropHintMode === 'off' ? 'Off' : dropHintMode === 'labels' ? 'Labels' : 'Minimal';
+    dropHintMode === 'off'
+      ? 'Colored Boxes'
+      : dropHintMode === 'labels'
+        ? 'Labels'
+        : 'Colored Rows';
 
   return (
     <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-white/90 px-3 py-3 backdrop-blur-sm">
