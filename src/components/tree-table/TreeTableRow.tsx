@@ -5,7 +5,6 @@ import { flexRender, type Row } from '@tanstack/react-table';
 
 import type { TreeTableCellRenderer, TreeTableColumnMeta } from './api-types';
 import { TreeTableCell } from './TreeTableCell';
-import { TreeTableDropIndicator } from './TreeTableDropIndicator';
 import { cn } from '../../lib/cn';
 import type { DndPreviewState } from '../../features/tree-table/dnd/dnd-types';
 import type { VisibleRow } from '../../features/tree-table/model/types';
@@ -67,6 +66,15 @@ export function TreeTableRow({
 
   const isDropTarget = preview.overId === tableRow.original.id;
   const shouldRenderBoxIndicator = dropHintMode === 'off' || dropHintMode === 'labels';
+  const showBoxBefore = shouldRenderBoxIndicator && isDropTarget && preview.mode === 'before';
+  const showBoxAfter = shouldRenderBoxIndicator && isDropTarget && preview.mode === 'after';
+  const showBoxInside = shouldRenderBoxIndicator && isDropTarget && preview.mode === 'inside';
+  const boxBorderColorClass =
+    preview.isValid && preview.mode === 'inside'
+      ? 'border-emerald-500'
+      : preview.isValid
+        ? 'border-cyan-500'
+        : 'border-rose-500';
   const showMinimalBeforeLine =
     dropHintMode === 'minimal' && isDropTarget && preview.isValid && preview.mode === 'before';
   const showMinimalAfterLine =
@@ -112,7 +120,7 @@ export function TreeTableRow({
       tabIndex={0}
       onFocus={() => onFocusRow(tableRow.original.id)}
     >
-      {tableRow.getVisibleCells().map((cell) => {
+      {tableRow.getVisibleCells().map((cell, cellIndex, cells) => {
         const meta = cell.column.columnDef.meta as TreeTableColumnMeta | undefined;
         const handleBindings = {
           attributes,
@@ -127,15 +135,19 @@ export function TreeTableRow({
               className={cn(
                 'relative min-w-[360px] px-4 py-0 align-middle',
                 meta?.cellClassName,
+                showBoxBefore && 'border-t-2',
+                showBoxAfter && 'border-b-2',
+                (showBoxBefore || showBoxAfter) && boxBorderColorClass,
+                showBoxInside && 'border-y-2',
+                showBoxInside && boxBorderColorClass,
+                showBoxInside && cellIndex === 0 && 'rounded-l-sm border-l-2',
+                showBoxInside && cellIndex === cells.length - 1 && 'rounded-r-sm border-r-2',
                 showMinimalBeforeLine && 'border-t-2 border-cyan-500',
                 showMinimalAfterLine && 'border-b-2 border-cyan-500',
                 showGrayBeforeLine && 'border-t-2 border-slate-500',
                 showGrayAfterLine && 'border-b-2 border-slate-500',
               )}
             >
-              {isDropTarget && preview.mode && shouldRenderBoxIndicator ? (
-                <TreeTableDropIndicator mode={preview.mode} valid={preview.isValid} />
-              ) : null}
               {isDropTarget && preview.mode && preview.isValid && dropHintMode === 'labels' ? (
                 <span
                   className={cn(
@@ -176,6 +188,13 @@ export function TreeTableRow({
             className={cn(
               'px-4 py-2 align-middle text-slate-700',
               meta?.cellClassName,
+              showBoxBefore && 'border-t-2',
+              showBoxAfter && 'border-b-2',
+              (showBoxBefore || showBoxAfter) && boxBorderColorClass,
+              showBoxInside && 'border-y-2',
+              showBoxInside && boxBorderColorClass,
+              showBoxInside && cellIndex === 0 && 'rounded-l-sm border-l-2',
+              showBoxInside && cellIndex === cells.length - 1 && 'rounded-r-sm border-r-2',
               showMinimalBeforeLine && 'border-t-2 border-cyan-500',
               showMinimalAfterLine && 'border-b-2 border-cyan-500',
               showGrayBeforeLine && 'border-t-2 border-slate-500',
