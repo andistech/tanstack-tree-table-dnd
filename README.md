@@ -11,10 +11,21 @@ A reusable React Tree Table with drag-and-drop reordering and reparenting, built
 ## Features
 
 - Hierarchical rows with expand/collapse
-- Drag-and-drop sibling reordering
-- Reparenting via drop-inside behavior
+- Drag-and-drop sibling reordering (`before` / `after`)
+- Reparenting via drop-inside behavior (`inside`)
 - Validation rules (self, descendant, non-droppable targets, current-parent check)
-- Multiple drop hint modes
+- Multiple drop hint modes:
+  - `Colored Boxes`
+  - `Labels`
+  - `Colored Rows`
+  - `Grayed Rows`
+- Full-row drag overlay preview (all visible columns)
+- Toolbar toggles for:
+  - virtualization
+  - drop hint mode
+  - auto-expand drop parent
+  - drag handle tooltips
+  - drag overlay opacity
 - Optional row virtualization
 - TypeScript-first API with render overrides
 
@@ -49,6 +60,7 @@ export function Example() {
     virtualizationEnabled,
     dropHintMode,
     overlayOpacity,
+    dragHandleTooltipsEnabled,
     onToggleExpand,
     onMove,
   } = useTreeTable();
@@ -62,6 +74,7 @@ export function Example() {
       virtualizationEnabled={virtualizationEnabled}
       dropHintMode={dropHintMode}
       overlayOpacity={overlayOpacity}
+      dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
       onToggleExpand={onToggleExpand}
       onMove={onMove}
     />
@@ -77,19 +90,39 @@ export function Example() {
 - Use a different tree column with `treeColumnId`
 - Customize tree cell UI with `renderTreeCell`
 - Customize drag overlay UI with `renderDragOverlay`
-- Style per column via TanStack `meta`:
-  - `meta.headerClassName`
-  - `meta.cellClassName`
+- Toggle built-in drag-handle tooltip visibility with `dragHandleTooltipsEnabled`
+- Style per column via TanStack `meta.headerClassName` and `meta.cellClassName`
+
+## Registry URLs
+
+- Index: `https://andistech.github.io/tanstack-tree-table-dnd/r/registry.json`
+- Item: `https://andistech.github.io/tanstack-tree-table-dnd/r/tree-table.json`
+
+## Local development
+
+```bash
+bun install
+bun dev
+```
+
+### Quality checks
+
+```bash
+bun run lint
+bun test
+bun run build
+```
+
+### Build registry artifacts locally
+
+```bash
+bun run registry:build
+```
 
 ## Included registry files
 
 - `registry.json`
 - `registry/tree-table.json`
-
-Published registry artifacts (from GitHub Pages build):
-
-- `https://andistech.github.io/tanstack-tree-table-dnd/r/registry.json`
-- `https://andistech.github.io/tanstack-tree-table-dnd/r/tree-table.json`
 
 ## Contributing
 

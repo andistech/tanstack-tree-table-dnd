@@ -15,6 +15,13 @@ bun test
 bun run build
 ```
 
+## Recommended workflow
+
+1. Create a branch from `main`
+2. Implement changes in small, focused commits
+3. Run quality checks
+4. Push and open a PR
+
 ## Tech stack
 
 - Bun
@@ -42,6 +49,18 @@ Canonical tree state is normalized:
 - DnD: `src/features/tree-table/dnd/*`
 - Hooks: `src/features/tree-table/hooks/*`
 - UI: `src/components/tree-table/*`
+
+### DnD UI behavior
+
+- Drop intents: `before`, `after`, `inside`
+- Hint modes:
+  - `off` (`Colored Boxes`)
+  - `labels`
+  - `minimal` (`Colored Rows`)
+  - `gray` (`Grayed Rows`)
+- Drag overlay preview renders full visible row columns
+- First overlay column intentionally omits drag handle and expander
+- Drag handle tooltip can be toggled with `dragHandleTooltipsEnabled`
 
 ## Move algorithm
 
@@ -86,6 +105,11 @@ Install URL for consumers:
 bunx shadcn@latest add https://andistech.github.io/tanstack-tree-table-dnd/r/tree-table.json
 ```
 
+Notes:
+
+- `public/r/*` is generated output; do not edit it manually
+- Keep `registry.json` and `registry/tree-table.json` as source of truth
+
 ## Demo deployment
 
 GitHub Pages workflow file:
@@ -101,3 +125,19 @@ Conventional Commits are enforced by hook:
 
 - `type(scope): Subject line`
 - Subject in imperative mood, capitalized, no period, max 50 chars
+- Body line length max 72 chars
+- Blank line between subject and body
+- Allowed types:
+  - `fix`
+  - `feat`
+  - `build`
+  - `chore`
+  - `ci`
+  - `docs`
+  - `style`
+  - `refactor`
+  - `perf`
+  - `test`
+  - `revert`
+  - `ops`
+  - `improve`
