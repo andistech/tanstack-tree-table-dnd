@@ -15,10 +15,12 @@ export function TreeTableDemo() {
     dropHintMode,
     overlayOpacity,
     autoExpandDropParent,
+    dragHandleTooltipsEnabled,
     setVirtualizationEnabled,
     setDropHintMode,
     setOverlayOpacity,
     setAutoExpandDropParent,
+    setDragHandleTooltipsEnabled,
     onToggleExpand,
     onMove,
     onReset,
@@ -48,6 +50,8 @@ export function TreeTableDemo() {
           onOverlayOpacityChange={setOverlayOpacity}
           autoExpandDropParent={autoExpandDropParent}
           onToggleAutoExpandDropParent={() => setAutoExpandDropParent((previous) => !previous)}
+          dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
+          onToggleDragHandleTooltips={() => setDragHandleTooltipsEnabled((previous) => !previous)}
           onReset={onReset}
           feedbackMessage={dragFeedback ?? feedbackMessage}
         />
@@ -58,6 +62,7 @@ export function TreeTableDemo() {
           virtualizationEnabled={virtualizationEnabled}
           dropHintMode={dropHintMode}
           overlayOpacity={overlayOpacity}
+          dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
           onToggleExpand={onToggleExpand}
           onMove={onMove}
           onDragFeedbackChange={setDragFeedback}

@@ -10,7 +10,7 @@ interface TreeTableHeaderProps {
 
 export function TreeTableHeader({ headerGroups }: TreeTableHeaderProps) {
   return (
-    <thead className="sticky top-0 z-20 bg-slate-900 text-slate-100">
+    <thead className="sticky top-0 z-20 bg-slate-50/95 backdrop-blur supports-[backdrop-filter]:bg-slate-50/80 [&_tr]:border-b">
       {headerGroups.map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
@@ -20,7 +20,7 @@ export function TreeTableHeader({ headerGroups }: TreeTableHeaderProps) {
               <th
                 key={header.id}
                 className={cn(
-                  'border-b border-slate-800 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide',
+                  'h-10 px-4 text-left align-middle text-xs font-medium tracking-wide text-slate-600',
                   meta?.headerClassName,
                 )}
               >

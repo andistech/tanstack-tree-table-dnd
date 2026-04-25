@@ -17,6 +17,7 @@ export function useTreeTable(initialState?: TreeState) {
   const [dropHintMode, setDropHintMode] = useState<DropHintMode>('labels');
   const [overlayOpacity, setOverlayOpacity] = useState(0.9);
   const [autoExpandDropParent, setAutoExpandDropParent] = useState(true);
+  const [dragHandleTooltipsEnabled, setDragHandleTooltipsEnabled] = useState(true);
 
   const visibleRows = useVisibleRows(state);
 
@@ -93,10 +94,12 @@ export function useTreeTable(initialState?: TreeState) {
     dropHintMode,
     overlayOpacity,
     autoExpandDropParent,
+    dragHandleTooltipsEnabled,
     setVirtualizationEnabled,
     setDropHintMode,
     setOverlayOpacity,
     setAutoExpandDropParent,
+    setDragHandleTooltipsEnabled,
     onToggleExpand,
     onMove,
     onReset,

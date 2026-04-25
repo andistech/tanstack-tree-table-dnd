@@ -12,6 +12,7 @@
     "@dnd-kit/core@^6",
     "@dnd-kit/sortable@^10",
     "@dnd-kit/utilities@^3",
+    "lucide-react@^1",
     "@radix-ui/react-tooltip@^1",
     "class-variance-authority@^0.7",
     "clsx@^2",

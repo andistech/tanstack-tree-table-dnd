@@ -30,6 +30,7 @@ export interface TreeTableProps {
   virtualizationEnabled: boolean;
   dropHintMode: DropHintMode;
   overlayOpacity: number;
+  dragHandleTooltipsEnabled?: boolean;
   containerClassName?: string;
   tableClassName?: string;
   onToggleExpand: (id: string) => void;
@@ -47,6 +48,7 @@ export function TreeTable({
   virtualizationEnabled,
   dropHintMode,
   overlayOpacity,
+  dragHandleTooltipsEnabled = true,
   containerClassName,
   tableClassName,
   onToggleExpand,
@@ -142,11 +144,11 @@ export function TreeTable({
         <div
           ref={containerRef}
           className={cn(
-            'max-h-[560px] overflow-auto rounded-lg border border-slate-200 bg-white shadow-sm',
+            'relative max-h-[560px] w-full overflow-auto rounded-md border border-slate-200 bg-white',
             containerClassName,
           )}
         >
-          <table className={cn('min-w-full border-collapse', tableClassName)}>
+          <table className={cn('w-full caption-bottom text-sm', tableClassName)}>
             <TreeTableHeader headerGroups={table.getHeaderGroups()} />
             <tbody>
               {paddingTop > 0 ? (
@@ -171,6 +173,7 @@ export function TreeTable({
                     renderTreeCell={renderTreeCell}
                     onToggleExpand={onToggleExpand}
                     dropHintMode={dropHintMode}
+                    dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
                     focusedRowId={focusedRowId}
                     onFocusRow={setFocusedRowId}
                   />

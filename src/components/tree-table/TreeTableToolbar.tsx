@@ -1,4 +1,5 @@
 import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
+import { cn } from '../../lib/cn';
 
 interface TreeTableToolbarProps {
   virtualizationEnabled: boolean;
@@ -9,6 +10,8 @@ interface TreeTableToolbarProps {
   onOverlayOpacityChange: (value: number) => void;
   autoExpandDropParent: boolean;
   onToggleAutoExpandDropParent: () => void;
+  dragHandleTooltipsEnabled: boolean;
+  onToggleDragHandleTooltips: () => void;
   onReset: () => void;
   feedbackMessage: string | null;
 }
@@ -22,9 +25,22 @@ export function TreeTableToolbar({
   onOverlayOpacityChange,
   autoExpandDropParent,
   onToggleAutoExpandDropParent,
+  dragHandleTooltipsEnabled,
+  onToggleDragHandleTooltips,
   onReset,
   feedbackMessage,
 }: TreeTableToolbarProps) {
+  const buttonBaseClassName =
+    'inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+  const outlineButtonClassName = cn(
+    buttonBaseClassName,
+    'border border-slate-300 bg-white text-slate-700 shadow-xs hover:bg-slate-100',
+  );
+  const secondaryButtonClassName = cn(
+    buttonBaseClassName,
+    'bg-slate-100 text-slate-900 shadow-xs hover:bg-slate-200',
+  );
+
   const dropHintModeLabel =
     dropHintMode === 'off'
       ? 'Colored Boxes'
@@ -40,7 +56,7 @@ export function TreeTableToolbar({
         <button
           type="button"
           onClick={onToggleVirtualization}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+          className={outlineButtonClassName}
         >
           Virtualization: {virtualizationEnabled ? 'On' : 'Off'}
         </button>
@@ -48,7 +64,7 @@ export function TreeTableToolbar({
         <button
           type="button"
           onClick={onCycleDropHintMode}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+          className={outlineButtonClassName}
         >
           Drop hints: {dropHintModeLabel}
         </button>
@@ -56,12 +72,20 @@ export function TreeTableToolbar({
         <button
           type="button"
           onClick={onToggleAutoExpandDropParent}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+          className={outlineButtonClassName}
         >
           Auto-expand parent: {autoExpandDropParent ? 'On' : 'Off'}
         </button>
 
-        <label className="flex items-center gap-2 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700">
+        <button
+          type="button"
+          onClick={onToggleDragHandleTooltips}
+          className={outlineButtonClassName}
+        >
+          Drag tooltips: {dragHandleTooltipsEnabled ? 'On' : 'Off'}
+        </button>
+
+        <label className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 shadow-xs">
           Overlay opacity
           <input
             type="range"
@@ -78,7 +102,7 @@ export function TreeTableToolbar({
         <button
           type="button"
           onClick={onReset}
-          className="rounded-md border border-amber-400 bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
+          className={secondaryButtonClassName}
         >
           Reset demo data
         </button>

@@ -8,6 +8,7 @@ import type { DraggableAttributes, DraggableSyntheticListeners } from '@dnd-kit/
 interface TreeTableCellProps {
   row: VisibleRow;
   onToggleExpand: (id: string) => void;
+  dragHandleTooltipsEnabled: boolean;
   handle: {
     attributes: DraggableAttributes;
     listeners?: DraggableSyntheticListeners;
@@ -29,13 +30,19 @@ function NodeIcon({ kind }: { kind: VisibleRow['data']['kind'] }) {
   );
 }
 
-export function TreeTableCell({ row, onToggleExpand, handle }: TreeTableCellProps) {
+export function TreeTableCell({
+  row,
+  onToggleExpand,
+  dragHandleTooltipsEnabled,
+  handle,
+}: TreeTableCellProps) {
   const leftPadding = row.depth * INDENT_PX;
 
   return (
     <div className="relative flex items-center gap-2 py-2" style={{ paddingLeft: `${leftPadding}px` }}>
       <TreeTableDragHandle
         disabled={row.data.isDisabled}
+        showTooltip={dragHandleTooltipsEnabled}
         attributes={handle.attributes}
         listeners={handle.listeners}
         setActivatorNodeRef={handle.setActivatorNodeRef}
