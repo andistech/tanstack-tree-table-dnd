@@ -8,7 +8,10 @@ import { TreeTableCell } from './TreeTableCell';
 import { cn } from '../../lib/cn';
 import type { DndPreviewState } from '../../features/tree-table/dnd/dnd-types';
 import type { VisibleRow } from '../../features/tree-table/model/types';
-import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
+import type {
+  DropHintMode,
+  DragHandleAlignment,
+} from '../../features/tree-table/hooks/useTreeTable';
 
 const rowVariants = cva('border-b border-slate-200 text-sm transition-colors', {
   variants: {
@@ -38,6 +41,8 @@ interface TreeTableRowProps {
   onToggleExpand: (id: string) => void;
   dropHintMode: DropHintMode;
   dragHandleTooltipsEnabled: boolean;
+  dragHandlesHoverOnly: boolean;
+  dragHandleAlignment: DragHandleAlignment;
   focusedRowId: string | null;
   onFocusRow: (id: string) => void;
 }
@@ -50,6 +55,8 @@ export function TreeTableRow({
   onToggleExpand,
   dropHintMode,
   dragHandleTooltipsEnabled,
+  dragHandlesHoverOnly,
+  dragHandleAlignment,
   focusedRowId,
   onFocusRow,
 }: TreeTableRowProps) {
@@ -114,7 +121,7 @@ export function TreeTableRow({
   return (
     <tr
       ref={setNodeRef}
-      className={cn(rowVariants({ state: stateVariant }))}
+      className={cn('group', rowVariants({ state: stateVariant }))}
       style={grayInvalidHatchStyle}
       data-drop-mode={isDropTarget ? preview.mode ?? undefined : undefined}
       tabIndex={0}
@@ -176,6 +183,8 @@ export function TreeTableRow({
                       onToggleExpand={onToggleExpand}
                       handle={handleBindings}
                       dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
+                      dragHandlesHoverOnly={dragHandlesHoverOnly}
+                      dragHandleAlignment={dragHandleAlignment}
                     />
                   )}
             </td>

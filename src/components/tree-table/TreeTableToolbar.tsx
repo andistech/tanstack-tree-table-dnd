@@ -1,4 +1,7 @@
-import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
+import type {
+  DropHintMode,
+  DragHandleAlignment,
+} from '../../features/tree-table/hooks/useTreeTable';
 import { cn } from '../../lib/cn';
 
 interface TreeTableToolbarProps {
@@ -12,6 +15,10 @@ interface TreeTableToolbarProps {
   onToggleAutoExpandDropParent: () => void;
   dragHandleTooltipsEnabled: boolean;
   onToggleDragHandleTooltips: () => void;
+  dragHandlesHoverOnly: boolean;
+  onToggleDragHandlesHoverOnly: () => void;
+  dragHandleAlignment: DragHandleAlignment;
+  onToggleDragHandleAlignment: () => void;
   onReset: () => void;
   feedbackMessage: string | null;
 }
@@ -27,6 +34,10 @@ export function TreeTableToolbar({
   onToggleAutoExpandDropParent,
   dragHandleTooltipsEnabled,
   onToggleDragHandleTooltips,
+  dragHandlesHoverOnly,
+  onToggleDragHandlesHoverOnly,
+  dragHandleAlignment,
+  onToggleDragHandleAlignment,
   onReset,
   feedbackMessage,
 }: TreeTableToolbarProps) {
@@ -83,6 +94,22 @@ export function TreeTableToolbar({
           className={outlineButtonClassName}
         >
           Drag tooltips: {dragHandleTooltipsEnabled ? 'On' : 'Off'}
+        </button>
+
+        <button
+          type="button"
+          onClick={onToggleDragHandlesHoverOnly}
+          className={outlineButtonClassName}
+        >
+          Drag handles: {dragHandlesHoverOnly ? 'Hover' : 'Always'}
+        </button>
+
+        <button
+          type="button"
+          onClick={onToggleDragHandleAlignment}
+          className={outlineButtonClassName}
+        >
+          Handle align: {dragHandleAlignment === 'left' ? 'Left' : 'Indented'}
         </button>
 
         <label className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 shadow-xs">

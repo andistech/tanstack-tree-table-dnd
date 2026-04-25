@@ -30,7 +30,10 @@ export type {
   VisibleRow,
 } from '../tree-table/types';
 export type { TreeTableProps } from '../tree-table/TreeTable';
-export type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
+export type {
+  DropHintMode,
+  DragHandleAlignment,
+} from '../../features/tree-table/hooks/useTreeTable';
 
 export { useTreeTable } from '../../features/tree-table/hooks/useTreeTable';
 export { useTreeTableDnd } from '../../features/tree-table/hooks/useTreeTableDnd';

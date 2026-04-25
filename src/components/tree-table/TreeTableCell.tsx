@@ -3,12 +3,15 @@ import { INDENT_PX } from './constants';
 import { TreeTableDragHandle } from './TreeTableDragHandle';
 import { cn } from '../../lib/cn';
 import type { VisibleRow } from '../../features/tree-table/model/types';
+import type { DragHandleAlignment } from '../../features/tree-table/hooks/useTreeTable';
 import type { DraggableAttributes, DraggableSyntheticListeners } from '@dnd-kit/core';
 
 interface TreeTableCellProps {
   row: VisibleRow;
   onToggleExpand: (id: string) => void;
   dragHandleTooltipsEnabled: boolean;
+  dragHandlesHoverOnly: boolean;
+  dragHandleAlignment: DragHandleAlignment;
   handle: {
     attributes: DraggableAttributes;
     listeners?: DraggableSyntheticListeners;
@@ -34,19 +37,33 @@ export function TreeTableCell({
   row,
   onToggleExpand,
   dragHandleTooltipsEnabled,
+  dragHandlesHoverOnly,
+  dragHandleAlignment,
   handle,
 }: TreeTableCellProps) {
   const leftPadding = row.depth * INDENT_PX;
+  const shouldLeftAlignHandle = dragHandleAlignment === 'left';
+  const handleControl = (
+    <TreeTableDragHandle
+      disabled={row.data.isDisabled}
+      showTooltip={dragHandleTooltipsEnabled}
+      showOnRowHoverOnly={dragHandlesHoverOnly}
+      attributes={handle.attributes}
+      listeners={handle.listeners}
+      setActivatorNodeRef={handle.setActivatorNodeRef}
+    />
+  );
 
   return (
     <div className="relative flex items-center gap-2 py-2" style={{ paddingLeft: `${leftPadding}px` }}>
-      <TreeTableDragHandle
-        disabled={row.data.isDisabled}
-        showTooltip={dragHandleTooltipsEnabled}
-        attributes={handle.attributes}
-        listeners={handle.listeners}
-        setActivatorNodeRef={handle.setActivatorNodeRef}
-      />
+      {shouldLeftAlignHandle
+        ? (
+            <>
+              <span className="h-7 w-7 shrink-0" aria-hidden="true" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2">{handleControl}</div>
+            </>
+          )
+        : handleControl}
 
       {row.hasChildren ? (
         <button

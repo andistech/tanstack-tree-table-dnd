@@ -7,6 +7,7 @@ import type { DropMode, MoveNodeResult, TreeState } from '../model/types';
 import { useVisibleRows } from './useVisibleRows';
 
 export type DropHintMode = 'off' | 'labels' | 'minimal' | 'gray';
+export type DragHandleAlignment = 'indented' | 'left';
 
 export function useTreeTable(initialState?: TreeState) {
   const seeded = useMemo(() => initialState ?? createDemoTreeState(), [initialState]);
@@ -18,6 +19,8 @@ export function useTreeTable(initialState?: TreeState) {
   const [overlayOpacity, setOverlayOpacity] = useState(0.9);
   const [autoExpandDropParent, setAutoExpandDropParent] = useState(true);
   const [dragHandleTooltipsEnabled, setDragHandleTooltipsEnabled] = useState(true);
+  const [dragHandlesHoverOnly, setDragHandlesHoverOnly] = useState(false);
+  const [dragHandleAlignment, setDragHandleAlignment] = useState<DragHandleAlignment>('indented');
 
   const visibleRows = useVisibleRows(state);
 
@@ -95,11 +98,15 @@ export function useTreeTable(initialState?: TreeState) {
     overlayOpacity,
     autoExpandDropParent,
     dragHandleTooltipsEnabled,
+    dragHandlesHoverOnly,
+    dragHandleAlignment,
     setVirtualizationEnabled,
     setDropHintMode,
     setOverlayOpacity,
     setAutoExpandDropParent,
     setDragHandleTooltipsEnabled,
+    setDragHandlesHoverOnly,
+    setDragHandleAlignment,
     onToggleExpand,
     onMove,
     onReset,

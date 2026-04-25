@@ -16,11 +16,15 @@ export function TreeTableDemo() {
     overlayOpacity,
     autoExpandDropParent,
     dragHandleTooltipsEnabled,
+    dragHandlesHoverOnly,
+    dragHandleAlignment,
     setVirtualizationEnabled,
     setDropHintMode,
     setOverlayOpacity,
     setAutoExpandDropParent,
     setDragHandleTooltipsEnabled,
+    setDragHandlesHoverOnly,
+    setDragHandleAlignment,
     onToggleExpand,
     onMove,
     onReset,
@@ -52,6 +56,12 @@ export function TreeTableDemo() {
           onToggleAutoExpandDropParent={() => setAutoExpandDropParent((previous) => !previous)}
           dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
           onToggleDragHandleTooltips={() => setDragHandleTooltipsEnabled((previous) => !previous)}
+          dragHandlesHoverOnly={dragHandlesHoverOnly}
+          onToggleDragHandlesHoverOnly={() => setDragHandlesHoverOnly((previous) => !previous)}
+          dragHandleAlignment={dragHandleAlignment}
+          onToggleDragHandleAlignment={() =>
+            setDragHandleAlignment((previous) => (previous === 'indented' ? 'left' : 'indented'))
+          }
           onReset={onReset}
           feedbackMessage={dragFeedback ?? feedbackMessage}
         />
@@ -63,6 +73,8 @@ export function TreeTableDemo() {
           dropHintMode={dropHintMode}
           overlayOpacity={overlayOpacity}
           dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
+          dragHandlesHoverOnly={dragHandlesHoverOnly}
+          dragHandleAlignment={dragHandleAlignment}
           onToggleExpand={onToggleExpand}
           onMove={onMove}
           onDragFeedbackChange={setDragFeedback}

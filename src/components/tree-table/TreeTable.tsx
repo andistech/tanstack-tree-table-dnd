@@ -18,7 +18,10 @@ import { treeTableCollisionDetection } from '../../features/tree-table/dnd/colli
 import { useTreeTableDnd } from '../../features/tree-table/hooks/useTreeTableDnd';
 import { TreeTableDragOverlay } from '../../features/tree-table/dnd/drag-overlay';
 import type { DropMode, TreeState, VisibleRow } from '../../features/tree-table/model/types';
-import type { DropHintMode } from '../../features/tree-table/hooks/useTreeTable';
+import type {
+  DropHintMode,
+  DragHandleAlignment,
+} from '../../features/tree-table/hooks/useTreeTable';
 
 export interface TreeTableProps {
   state: TreeState;
@@ -31,6 +34,8 @@ export interface TreeTableProps {
   dropHintMode: DropHintMode;
   overlayOpacity: number;
   dragHandleTooltipsEnabled?: boolean;
+  dragHandlesHoverOnly?: boolean;
+  dragHandleAlignment?: DragHandleAlignment;
   containerClassName?: string;
   tableClassName?: string;
   onToggleExpand: (id: string) => void;
@@ -49,6 +54,8 @@ export function TreeTable({
   dropHintMode,
   overlayOpacity,
   dragHandleTooltipsEnabled = true,
+  dragHandlesHoverOnly = false,
+  dragHandleAlignment = 'indented',
   containerClassName,
   tableClassName,
   onToggleExpand,
@@ -221,6 +228,8 @@ export function TreeTable({
                     onToggleExpand={onToggleExpand}
                     dropHintMode={dropHintMode}
                     dragHandleTooltipsEnabled={dragHandleTooltipsEnabled}
+                    dragHandlesHoverOnly={dragHandlesHoverOnly}
+                    dragHandleAlignment={dragHandleAlignment}
                     focusedRowId={focusedRowId}
                     onFocusRow={setFocusedRowId}
                   />

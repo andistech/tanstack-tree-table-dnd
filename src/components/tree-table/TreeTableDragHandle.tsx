@@ -7,6 +7,7 @@ import { cn } from '../../lib/cn';
 interface TreeTableDragHandleProps {
   disabled?: boolean;
   showTooltip?: boolean;
+  showOnRowHoverOnly?: boolean;
   attributes: DraggableAttributes;
   listeners?: DraggableSyntheticListeners;
   setActivatorNodeRef: (element: HTMLElement | null) => void;
@@ -15,6 +16,7 @@ interface TreeTableDragHandleProps {
 export function TreeTableDragHandle({
   disabled,
   showTooltip = true,
+  showOnRowHoverOnly = false,
   attributes,
   listeners,
   setActivatorNodeRef,
@@ -26,8 +28,12 @@ export function TreeTableDragHandle({
       className={cn(
         'grid h-7 w-7 place-items-center rounded-md text-slate-500 transition',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2',
+        showOnRowHoverOnly &&
+          'opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto',
         disabled
-          ? 'cursor-not-allowed opacity-40'
+          ? showOnRowHoverOnly
+            ? 'cursor-not-allowed text-slate-300'
+            : 'cursor-not-allowed text-slate-300 opacity-40'
           : 'cursor-grab hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing',
       )}
       aria-label="Drag row"
