@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 import type {
@@ -10,7 +10,7 @@ import type {
   TreeTableOverlayRenderer,
 } from './api-types';
 import { treeTableColumns } from './columns';
-import { ROW_HEIGHT_PX } from './constants';
+import { INDENT_PX, ROW_HEIGHT_PX } from './constants';
 import { TreeTableHeader } from './TreeTableHeader';
 import { TreeTableRow } from './TreeTableRow';
 import { cn } from '../../lib/cn';
@@ -91,13 +91,60 @@ export function TreeTable({
       : 0;
 
   const rowIds = useMemo(() => visibleRows.map((row) => row.id), [visibleRows]);
-
   const { sensors, activeRow, preview, onDragStart, onDragMove, onDragOver, onDragEnd, onDragCancel } =
     useTreeTableDnd({
       state,
       visibleRows,
       onMove,
     });
+
+  const activeTableRow = useMemo(
+    () => (activeRow ? tableRows.find((row) => row.original.id === activeRow.id) ?? null : null),
+    [activeRow, tableRows],
+  );
+  const overlayCells = useMemo(() => {
+    if (!activeTableRow || !activeRow) {
+      return [];
+    }
+
+    return activeTableRow.getVisibleCells().map((cell) => {
+      if (cell.column.id === treeColumnId) {
+        return {
+          id: cell.id,
+          width: cell.column.getSize(),
+          className: 'px-4 py-2 align-middle',
+          content: (
+            <div
+              className="flex min-w-0 items-center gap-2"
+              style={{ paddingLeft: `${activeRow.depth * INDENT_PX}px` }}
+            >
+              <span
+                className={cn(
+                  'inline-flex h-5 min-w-5 items-center justify-center rounded text-[10px] font-semibold uppercase',
+                  activeRow.data.kind === 'group'
+                    ? 'bg-amber-100 text-amber-700'
+                    : 'bg-slate-100 text-slate-600',
+                )}
+                aria-hidden="true"
+              >
+                {activeRow.data.kind === 'group' ? 'G' : 'I'}
+              </span>
+              <span className="truncate font-medium text-slate-900">{activeRow.data.label}</span>
+            </div>
+          ),
+        };
+      }
+
+      const renderedCell = flexRender(cell.column.columnDef.cell, cell.getContext());
+
+      return {
+        id: cell.id,
+        width: cell.column.getSize(),
+        className: 'px-4 py-2 align-middle text-slate-700',
+        content: renderedCell ?? <span className="truncate">{String(cell.getValue() ?? '—')}</span>,
+      };
+    });
+  }, [activeRow, activeTableRow, treeColumnId]);
 
   useEffect(() => {
     if (!onDragFeedbackChange) {
@@ -194,7 +241,7 @@ export function TreeTable({
         {activeRow
           ? renderDragOverlay
             ? renderDragOverlay({ row: activeRow, overlayOpacity })
-            : <TreeTableDragOverlay row={activeRow} overlayOpacity={overlayOpacity} />
+            : <TreeTableDragOverlay cells={overlayCells} overlayOpacity={overlayOpacity} />
           : null}
       </DragOverlay>
     </DndContext>

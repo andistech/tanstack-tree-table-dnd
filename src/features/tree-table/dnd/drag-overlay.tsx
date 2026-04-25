@@ -1,22 +1,43 @@
-import type { VisibleRow } from '../model/types';
+import type { ReactNode } from 'react';
+
+interface DragOverlayCell {
+  id: string;
+  content: ReactNode;
+  width: number;
+  className: string;
+}
 
 interface TreeTableDragOverlayProps {
-  row: VisibleRow | null;
+  cells: DragOverlayCell[];
   overlayOpacity: number;
 }
 
-export function TreeTableDragOverlay({ row, overlayOpacity }: TreeTableDragOverlayProps) {
-  if (!row) {
+export function TreeTableDragOverlay({ cells, overlayOpacity }: TreeTableDragOverlayProps) {
+  if (cells.length === 0) {
     return null;
   }
 
   return (
     <div
-      className="w-[320px] rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-xl"
+      className="overflow-hidden rounded-md border border-slate-300 bg-white text-sm shadow-xl"
       style={{ opacity: overlayOpacity }}
     >
-      <div className="font-semibold text-slate-900">{row.data.label}</div>
-      <div className="text-xs text-slate-500">{row.data.kind.toUpperCase()}</div>
+      <table className="w-full table-fixed">
+        <colgroup>
+          {cells.map((cell) => (
+            <col key={cell.id} style={{ width: `${Math.max(120, cell.width)}px` }} />
+          ))}
+        </colgroup>
+        <tbody>
+          <tr className="border-b border-slate-200">
+            {cells.map((cell) => (
+              <td key={cell.id} className={cell.className}>
+                {cell.content}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
